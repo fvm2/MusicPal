@@ -27,6 +27,7 @@ import use_case.note.NoteDataAccessInterface;
  * csc207-grade-apis-demo/documentation/fg3zkjm/5-password-protected-user">
  *     the documentation</a>
  * of the API for more details.
+ * WE DO NOT NEED TO WORRY ABOUT SETTING UP THE DB FOR MONDAY.
  */
 public class DBNoteDataAccessObject implements NoteDataAccessInterface {
     private static final int SUCCESS_CODE = 200;

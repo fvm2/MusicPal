@@ -41,7 +41,7 @@ public class MainNoteApplication {
      * in your application; it just depends on what your program's main
      * functionality.
      * </p>
-     * @param args commandline arguments are ignored
+     * @param args commandline arguments are ignsdwored
      */
     public static void main(String[] args) {
 

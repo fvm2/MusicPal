@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class NoteInteractorTest {
+public class SignupInteractorTest {
 
     @Test
     public void testExecuteRefreshSuccess() {
@@ -25,7 +25,7 @@ public class NoteInteractorTest {
             }
         };
 
-        NoteOutputBoundary noteOB = new NoteOutputBoundary() {
+        SignupOutputBoundary noteOB = new SignupOutputBoundary() {
             @Override
             public void prepareSuccessView(String message) {
                 assertEquals("test", message);
@@ -37,9 +37,9 @@ public class NoteInteractorTest {
             }
         };
 
-        NoteInteractor noteInteractor = new NoteInteractor(noteDAO, noteOB);
+        SignupInteractor signupInteractor = new SignupInteractor(noteDAO, noteOB);
 
-        noteInteractor.executeRefresh();
+        signupInteractor.executeRefresh();
 
 
     }
