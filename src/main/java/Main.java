@@ -40,7 +40,6 @@ public class Main {
         frame.add(signUpButton, gbc);
 
         signUpButton.addActionListener(e -> {
-            // In a real app, you would validate and store user data
             String name = nameField.getText();
             if (!name.isEmpty()) {
                 frame.dispose();
