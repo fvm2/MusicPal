@@ -51,8 +51,9 @@ public class Main {
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-      
-        private static void showPreferencesGUI() {
+    }
+
+    private static void showPreferencesGUI() {
         JFrame frame = new JFrame("Enter Your Music Preferences");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
@@ -100,4 +101,31 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
+    private static void showRecommendationGUI() {
+        JFrame frame = new JFrame("Your Music Recommendations");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.setLayout(new BorderLayout());
+        String preferencesInput = "[" + String.join(", ", userPreferences) + "] ; 3 ; Songs";
+        String recommendations = engine.getRecommendationsAsString(preferencesInput);
+
+        JTextArea recommendationsArea = new JTextArea();
+        recommendationsArea.setEditable(false);
+        recommendationsArea.setText(recommendations);
+
+        JScrollPane scrollPane = new JScrollPane(recommendationsArea);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(e -> {
+            engine.cleanup();
+            System.exit(0);
+        });
+        frame.add(exitButton, BorderLayout.SOUTH);
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
+
+}
