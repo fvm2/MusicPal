@@ -40,6 +40,7 @@ public class Main {
         frame.add(signUpButton, gbc);
 
         signUpButton.addActionListener(e -> {
+            // In a real app, you would validate and store user data
             String name = nameField.getText();
             if (!name.isEmpty()) {
                 frame.dispose();
@@ -103,29 +104,51 @@ public class Main {
     }
 
     private static void showRecommendationGUI() {
-        JFrame frame = new JFrame("Your Music Recommendations");
+        JFrame frame = new JFrame("Get Music Recommendations");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
-        frame.setLayout(new BorderLayout());
-        String preferencesInput = "[" + String.join(", ", userPreferences) + "] ; 3 ; Songs";
-        String recommendations = engine.getRecommendationsAsString(preferencesInput);
+        frame.setSize(400, 300);
+        frame.setLayout(new GridBagLayout());
 
-        JTextArea recommendationsArea = new JTextArea();
-        recommendationsArea.setEditable(false);
-        recommendationsArea.setText(recommendations);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-        JScrollPane scrollPane = new JScrollPane(recommendationsArea);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        JTextArea recommendationArea = new JTextArea(10, 30);
+        recommendationArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(recommendationArea);
 
-        JButton exitButton = new JButton("Exit");
-        exitButton.addActionListener(e -> {
-            engine.cleanup();
-            System.exit(0);
+        JButton getRecommendationButton = new JButton("Get Recommendation");
+
+        frame.add(scrollPane, gbc);
+        frame.add(getRecommendationButton, gbc);
+
+        getRecommendationButton.addActionListener(e -> {
+            getRecommendationButton.setEnabled(false);
+            recommendationArea.setText("Getting recommendation...");
+
+            String input = "[" + String.join(", ", userPreferences) + "] ; 1 ; Songs";
+
+            new SwingWorker<String, Void>() {
+                @Override
+                protected String doInBackground() {
+                    return engine.getRecommendationsAsString(input);
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        String result = get();
+                        recommendationArea.setText(result);
+                    } catch (Exception ex) {
+                        recommendationArea.setText("Error getting recommendation: " + ex.getMessage());
+                    }
+                    getRecommendationButton.setEnabled(true);
+                }
+            }.execute();
         });
-        frame.add(exitButton, BorderLayout.SOUTH);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
 }
