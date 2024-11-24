@@ -1,30 +1,19 @@
 package app;
 
-import javax.swing.SwingUtilities;
-
+import app.AppController;
 import app.engine.MusicRecommendationEngine;
-import app.gui.SignUpGUI;
 
-/**
- * The Main Class.
- */
 public class MainApp {
-
-    /**
-     * The Main Method.
-     * @param args -
-     */
     public static void main(String[] args) {
         String apiKey = "api-key"; // Replace with your API key
-        MusicRecommendationEngine recommendationEngine = new MusicRecommendationEngine(apiKey);;
-        var appController = new AppController(recommendationEngine);
 
-        recommendationEngine.createAssistant();
+        // Initialize the MusicRecommendationEngine
+        MusicRecommendationEngine engine = new MusicRecommendationEngine(apiKey);
 
-        SwingUtilities.invokeLater(() -> {
-            var signUpGUI = new SignUpGUI(appController);
-            signUpGUI.display();
-        });
+        // Pass the engine to the AppController
+        AppController controller = new AppController(engine);
+
+        // Start the application
+        controller.start();
     }
 }
-

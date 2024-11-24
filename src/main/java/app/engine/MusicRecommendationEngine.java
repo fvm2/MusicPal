@@ -238,4 +238,16 @@ public class MusicRecommendationEngine {
         }
     }
 
+    // Fetches similar artists using the assistant
+    public String getSimilarArtists(String artist) {
+        String input = "[" + artist + "] ; 5 ; Artists"; // Example: Fetch 5 similar artists
+        return getRecommendationsAsString(input); // Reuse existing method
+    }
+
+    // Generates a smooth playlist
+    public String generateSmoothPlaylist(List<String> songs) {
+        String input = "[" + String.join(", ", songs) + "] ; 10 ; Songs"; // Example: Return 10 songs
+        return getRecommendationsAsString(input);
+    }
+
 }

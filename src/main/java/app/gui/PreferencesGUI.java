@@ -1,20 +1,23 @@
 package app.gui;
 
-import app.AppController;
+import app.engine.MusicRecommendationEngine;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PreferencesGUI {
-    private final AppController controller;
+    private final MusicRecommendationEngine engine;
 
-    public PreferencesGUI(AppController controller) {
-        this.controller = controller;
+    public PreferencesGUI(MusicRecommendationEngine engine) {
+        this.engine = engine;
+        createAndShowGUI();
     }
 
-    public void display() {
+    private void createAndShowGUI() {
         JFrame frame = new JFrame("Enter Your Music Preferences");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setLayout(new GridBagLayout());
 
@@ -25,6 +28,7 @@ public class PreferencesGUI {
 
         JTextField[] songFields = new JTextField[3];
         JTextField[] artistFields = new JTextField[3];
+        List<String> preferences = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
             frame.add(new JLabel("Song " + (i + 1) + ":"), gbc);
@@ -40,23 +44,20 @@ public class PreferencesGUI {
         frame.add(submitButton, gbc);
 
         submitButton.addActionListener(e -> {
-            String[] songs = new String[3];
-            String[] artists = new String[3];
-            boolean validInput = true;
-
+            preferences.clear();
             for (int i = 0; i < 3; i++) {
-                songs[i] = songFields[i].getText();
-                artists[i] = artistFields[i].getText();
-                if (songs[i].isEmpty() || artists[i].isEmpty()) {
-                    validInput = false;
+                String song = songFields[i].getText();
+                String artist = artistFields[i].getText();
+                if (!song.isEmpty() && !artist.isEmpty()) {
+                    preferences.add(song + " - " + artist);
                 }
             }
 
-            if (validInput) {
+            if (preferences.size() == 3) {
+                JOptionPane.showMessageDialog(frame, "Preferences saved successfully!");
                 frame.dispose();
-                controller.submitPreferences(songs, artists);
             } else {
-                JOptionPane.showMessageDialog(frame, "Please enter all songs and artists");
+                JOptionPane.showMessageDialog(frame, "Please fill in all fields.");
             }
         });
 
@@ -64,4 +65,3 @@ public class PreferencesGUI {
         frame.setVisible(true);
     }
 }
-

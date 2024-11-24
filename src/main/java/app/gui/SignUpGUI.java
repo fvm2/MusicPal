@@ -1,20 +1,21 @@
 package app.gui;
 
-import app.AppController;
+import app.engine.MusicRecommendationEngine;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SignUpGUI {
-    private final AppController controller;
+    private final MusicRecommendationEngine engine;
 
-    public SignUpGUI(AppController controller) {
-        this.controller = controller;
+    public SignUpGUI(MusicRecommendationEngine engine) {
+        this.engine = engine;
+        createAndShowGUI();
     }
 
-    public void display() {
+    private void createAndShowGUI() {
         JFrame frame = new JFrame("Music Recommendation System - Sign Up");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLayout(new GridBagLayout());
 
@@ -39,10 +40,10 @@ public class SignUpGUI {
         signUpButton.addActionListener(e -> {
             String name = nameField.getText();
             if (!name.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Sign-up successful!");
                 frame.dispose();
-                controller.launchPreferencesGui();
             } else {
-                JOptionPane.showMessageDialog(frame, "Please fill in all fields");
+                JOptionPane.showMessageDialog(frame, "Please fill in all fields.");
             }
         });
 

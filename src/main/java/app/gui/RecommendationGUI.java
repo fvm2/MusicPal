@@ -27,7 +27,6 @@ public class RecommendationGUI {
 
         JButton exitButton = new JButton("Exit");
         exitButton.addActionListener(e -> {
-            controller.cleanup();
             System.exit(0);
         });
         frame.add(exitButton, BorderLayout.SOUTH);
