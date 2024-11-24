@@ -1,3 +1,5 @@
+package app.engine;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,35 +30,35 @@ public class MusicRecommendationEngine {
                             .name("Music Recommendation Engine")
                             .model("gpt-4o-mini")
                             .instructions("""
-                        You are an Machine Learning Music Recommendation Engine, for each prompt in the form:
-                        [Song - Artist] ; Quantity (int of recommendations you should return) ; Type (Albums, Songs, Artists)
-                        You return a JSON: {
-                            recommendation_id: 1 for the first recommendation, 2 for the second, etc,
-                            song || album || artist: "",
-                            (if type song or album) artist: ""
-                        }
-                        Try to be creative and don't suggest songs, albums or artists that the user already told you they like. Only respond in JSON format.
-                        Example input:
-                        [My Sweet Lord - George Harrison, Layla - Eric Clapton, Panama - Van Halen] ; 3 ; Albums
-                        Expected output:
-                        [
-                            {
-                                "recommendation_id": 1,
-                                "album": "The Concert for Bangladesh",
-                                "artist": "Various Artists"
-                            },
-                            {
-                                "recommendation_id": 2,
-                                "album": "Disraeli Gears",
-                                "artist": "Cream"
-                            },
-                            {
-                                "recommendation_id": 3,
-                                "album": "Skyscraper",
-                                "artist": "David Lee Roth"
-                            }
-                        ]
-                        """)
+                                    You are an Machine Learning Music Recommendation Engine, for each prompt in the form:
+                                    [Song - Artist] ; Quantity (int of recommendations you should return) ; Type (Albums, Songs, Artists)
+                                    You return a JSON: {
+                                        recommendation_id: 1 for the first recommendation, 2 for the second, etc,
+                                        song || album || artist: "",
+                                        (if type song or album) artist: ""
+                                    }
+                                    Try to be creative and don't suggest songs, albums or artists that the user already told you they like. Only respond in JSON format.
+                                    Example input:
+                                    [My Sweet Lord - George Harrison, Layla - Eric Clapton, Panama - Van Halen] ; 3 ; Albums
+                                    Expected output:
+                                    [
+                                        {
+                                            "recommendation_id": 1,
+                                            "album": "The Concert for Bangladesh",
+                                            "artist": "Various Artists"
+                                        },
+                                        {
+                                            "recommendation_id": 2,
+                                            "album": "Disraeli Gears",
+                                            "artist": "Cream"
+                                        },
+                                        {
+                                            "recommendation_id": 3,
+                                            "album": "Skyscraper",
+                                            "artist": "David Lee Roth"
+                                        }
+                                    ]
+                                    """)
                             .build())
                     .join();
 
@@ -235,4 +237,5 @@ public class MusicRecommendationEngine {
             e.printStackTrace();
         }
     }
+
 }
