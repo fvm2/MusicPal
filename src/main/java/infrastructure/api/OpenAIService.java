@@ -1,8 +1,7 @@
-package infrastructure;
+package infrastructure.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.ports.IOpenAIService;
+import entity.ports.IOpenAIService;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.assistant.*;
 

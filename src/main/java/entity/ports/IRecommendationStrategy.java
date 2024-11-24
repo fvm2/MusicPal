@@ -1,7 +1,7 @@
-package domain.ports;
+package entity.ports;
 
-import domain.Recommendation;
-import domain.UserPreferences;
+import entity.Recommendation;
+import entity.UserPreferences;
 
 import java.util.List;
 

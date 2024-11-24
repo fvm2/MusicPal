@@ -1,9 +1,8 @@
 package application;
 
-import domain.Recommendation;
-import domain.UserPreferences;
-import domain.ports.IOpenAIService;
-import domain.ports.IRecommendationStrategy;
+import entity.Recommendation;
+import entity.UserPreferences;
+import entity.ports.IOpenAIService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

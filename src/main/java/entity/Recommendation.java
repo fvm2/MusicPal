@@ -1,4 +1,4 @@
-package domain;
+package entity;
 
 public class Recommendation {
     private int id;
