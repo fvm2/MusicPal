@@ -3,30 +3,33 @@ package presentation;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import domain.User;
 import domain.UserPreferences;
 import domain.Recommendation;
+import application.UserService;
 import application.RecommendationService;
 
 public class MusicRecommendationGUI {
+    private final UserService userService;
     private final RecommendationService recommendationService;
-    private UserPreferences userPreferences;
 
-    public MusicRecommendationGUI(RecommendationService recommendationService) {
+    public MusicRecommendationGUI(UserService userService, RecommendationService recommendationService) {
+        this.userService = userService;
         this.recommendationService = recommendationService;
-        this.userPreferences = new UserPreferences();
     }
 
     public void start() {
-        SwingUtilities.invokeLater(this::createAndShowSignUpGUI);
+        SwingUtilities.invokeLater(() -> new LoginWindow(userService, this).show());
     }
 
-    private void createAndShowSignUpGUI() {
+    public void showSignUpGUI() {
         JFrame frame = new JFrame("Music Recommendation System - Sign Up");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        frame.setSize(400, 400);
         frame.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -38,7 +41,9 @@ public class MusicRecommendationGUI {
         JTextField nameField = new JTextField(20);
         JTextField emailField = new JTextField(20);
         JPasswordField passwordField = new JPasswordField(20);
+        JTextField countryField = new JTextField(20);
         JButton signUpButton = new JButton("Sign Up");
+        JButton backButton = new JButton("Back to Login");
 
         // Add components to frame
         frame.add(createLabel("Name:"), gbc);
@@ -47,26 +52,40 @@ public class MusicRecommendationGUI {
         frame.add(emailField, gbc);
         frame.add(createLabel("Password:"), gbc);
         frame.add(passwordField, gbc);
+        frame.add(createLabel("Country:"), gbc);
+        frame.add(countryField, gbc);
         frame.add(signUpButton, gbc);
+        frame.add(backButton, gbc);
 
-        // Add action listener
+        // Add action listeners
         signUpButton.addActionListener(e -> {
-            String name = nameField.getText();
-            String email = emailField.getText();
+            String name = nameField.getText().trim();
+            String email = emailField.getText().trim();
             String password = new String(passwordField.getPassword());
+            String country = countryField.getText().trim();
 
-            if (validateSignUpInput(name, email, password)) {
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || country.isEmpty()) {
+                showError(frame, "Please fill in all fields");
+                return;
+            }
+
+            if (userService.registerUser(name, email, password, country)) {
                 frame.dispose();
                 showPreferencesGUI();
             } else {
-                showError(frame, "Please fill in all fields");
+                showError(frame, "Email already registered");
             }
+        });
+
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new LoginWindow(userService, this).show();
         });
 
         centerAndShow(frame);
     }
 
-    private void showPreferencesGUI() {
+    public void showPreferencesGUI() {
         JFrame frame = new JFrame("Enter Your Music Preferences");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
@@ -83,7 +102,7 @@ public class MusicRecommendationGUI {
 
         // Add input fields for songs and artists
         for (int i = 0; i < 3; i++) {
-            frame.add(createLabel("Song " + (i + 1) + ":"), gbc);
+            frame.add(createLabel("Favorite Song " + (i + 1) + ":"), gbc);
             songFields[i] = new JTextField(20);
             frame.add(songFields[i], gbc);
 
@@ -99,7 +118,7 @@ public class MusicRecommendationGUI {
         submitButton.addActionListener(e -> {
             if (validateAndSavePreferences(songFields, artistFields)) {
                 frame.dispose();
-                showRecommendationGUI();
+                new RecommendationWindow(userService, recommendationService).show();
             } else {
                 showError(frame, "Please enter all songs and artists");
             }
@@ -108,59 +127,13 @@ public class MusicRecommendationGUI {
         centerAndShow(frame);
     }
 
-    private void showRecommendationGUI() {
-        JFrame frame = new JFrame("Get Music Recommendations");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
-
-        // Create components
-        JTextArea recommendationArea = new JTextArea(10, 30);
-        recommendationArea.setEditable(false);
-        recommendationArea.setLineWrap(true);
-        recommendationArea.setWrapStyleWord(true);
-
-        JScrollPane scrollPane = new JScrollPane(recommendationArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        JButton getRecommendationButton = new JButton("Get Recommendation");
-
-        // Add components
-        frame.add(scrollPane, gbc);
-        frame.add(getRecommendationButton, gbc);
-
-        // Add action listener
-        getRecommendationButton.addActionListener(e -> {
-            getRecommendationButton.setEnabled(false);
-            recommendationArea.setText("Getting recommendations...");
-
-            // Use SwingWorker for asynchronous API call
-            new SwingWorker<List<Recommendation>, Void>() {
-                @Override
-                protected List<Recommendation> doInBackground() {
-                    return recommendationService.getRecommendations(userPreferences, 1, "Songs");
-                }
-
-                @Override
-                protected void done() {
-                    try {
-                        List<Recommendation> recommendations = get();
-                        recommendationArea.setText(formatRecommendations(recommendations));
-                    } catch (InterruptedException | ExecutionException ex) {
-                        recommendationArea.setText("Error getting recommendations: " + ex.getMessage());
-                    } finally {
-                        getRecommendationButton.setEnabled(true);
-                    }
-                }
-            }.execute();
-        });
-
-        centerAndShow(frame);
+    public void showPreferencesOrRecommendationGUI() {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser.getPreferences().getFavoriteSongs().isEmpty()) {
+            showPreferencesGUI();
+        } else {
+            new RecommendationWindow(userService, recommendationService).show();
+        }
     }
 
     // Helper methods
@@ -182,13 +155,9 @@ public class MusicRecommendationGUI {
                 JOptionPane.ERROR_MESSAGE);
     }
 
-    private boolean validateSignUpInput(String name, String email, String password) {
-        return !name.isEmpty() && !email.isEmpty() && !password.isEmpty();
-    }
-
     private boolean validateAndSavePreferences(JTextField[] songFields, JTextField[] artistFields) {
         boolean allFieldsFilled = true;
-        userPreferences = new UserPreferences(); // Reset preferences
+        UserPreferences preferences = new UserPreferences();
 
         for (int i = 0; i < 3; i++) {
             String song = songFields[i].getText().trim();
@@ -196,21 +165,117 @@ public class MusicRecommendationGUI {
 
             if (song.isEmpty() || artist.isEmpty()) {
                 allFieldsFilled = false;
-            } else {
-                userPreferences.addSongWithArtist(song, artist);
+                break;
             }
+            preferences.addSongWithArtist(song, artist);
+        }
+
+        if (allFieldsFilled) {
+            User currentUser = userService.getCurrentUser();
+            currentUser.updatePreferences(preferences);
+            userService.updateUserPreferences(currentUser);
         }
 
         return allFieldsFilled;
     }
 
-    private String formatRecommendations(List<Recommendation> recommendations) {
-        if (recommendations == null || recommendations.isEmpty()) {
-            return "No recommendations found.";
+    // Inner class for Recommendation Window
+    public static class RecommendationWindow {
+        private final UserService userService;
+        private final RecommendationService recommendationService;
+
+        public RecommendationWindow(UserService userService, RecommendationService recommendationService) {
+            this.userService = userService;
+            this.recommendationService = recommendationService;
         }
 
-        return recommendations.stream()
-                .map(Recommendation::toString)
-                .collect(Collectors.joining("\n\n"));
+        public void show() {
+            JFrame frame = new JFrame("Get Music Recommendations");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(500, 400);
+            frame.setLayout(new GridBagLayout());
+
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(5, 5, 5, 5);
+
+            // Create components
+            JTextArea recommendationArea = new JTextArea(10, 30);
+            recommendationArea.setEditable(false);
+            recommendationArea.setLineWrap(true);
+            recommendationArea.setWrapStyleWord(true);
+
+            JScrollPane scrollPane = new JScrollPane(recommendationArea);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+            JButton getRecommendationButton = new JButton("Get Recommendation");
+            JButton profileButton = new JButton("View Profile");
+            JButton logoutButton = new JButton("Logout");
+
+            // Create button panel
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            buttonPanel.add(getRecommendationButton);
+            buttonPanel.add(profileButton);
+            buttonPanel.add(logoutButton);
+
+            // Add components
+            frame.add(scrollPane, gbc);
+            frame.add(buttonPanel, gbc);
+
+            // Add action listeners
+            getRecommendationButton.addActionListener(e -> {
+                getRecommendationButton.setEnabled(false);
+                recommendationArea.setText("Getting recommendations...");
+
+                new SwingWorker<List<Recommendation>, Void>() {
+                    @Override
+                    protected List<Recommendation> doInBackground() {
+                        return recommendationService.getRecommendations(
+                                userService.getCurrentUser().getPreferences(),
+                                1,
+                                "Songs"
+                        );
+                    }
+
+                    @Override
+                    protected void done() {
+                        try {
+                            List<Recommendation> recommendations = get();
+                            userService.saveRecommendationHistory(recommendations);
+                            recommendationArea.setText(formatRecommendations(recommendations));
+                        } catch (InterruptedException | ExecutionException ex) {
+                            recommendationArea.setText("Error getting recommendations: " + ex.getMessage());
+                        } finally {
+                            getRecommendationButton.setEnabled(true);
+                        }
+                    }
+                }.execute();
+            });
+
+            profileButton.addActionListener(e -> {
+                frame.dispose();
+                new UserProfileWindow(userService, recommendationService).show();
+            });
+
+            logoutButton.addActionListener(e -> {
+                userService.logout();
+                frame.dispose();
+                new LoginWindow(userService, new MusicRecommendationGUI(userService, recommendationService)).show();
+            });
+
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        }
+
+        private String formatRecommendations(List<Recommendation> recommendations) {
+            if (recommendations == null || recommendations.isEmpty()) {
+                return "No recommendations found.";
+            }
+
+            return recommendations.stream()
+                    .map(Recommendation::toString)
+                    .collect(Collectors.joining("\n\n"));
+        }
     }
 }
