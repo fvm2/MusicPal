@@ -9,6 +9,7 @@ public class MainApp {
 
         // Initialize the MusicRecommendationEngine
         MusicRecommendationEngine engine = new MusicRecommendationEngine(apiKey);
+        engine.createAssistant();
 
         // Pass the engine to the AppController
         AppController controller = new AppController(engine);
