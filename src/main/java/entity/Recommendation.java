@@ -1,5 +1,8 @@
 package entity;
 
+/**
+ * Encapsulates a recommendation done by the AI or a friend.
+ */
 public class Recommendation {
     private int id;
     private String content;
