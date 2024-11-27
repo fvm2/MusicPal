@@ -28,3 +28,4 @@ public class MenuViewModel extends ViewModel<String> {
         this.firePropertyChanged();
     }
 }
+

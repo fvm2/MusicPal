@@ -93,3 +93,4 @@ public class MenuView extends JPanel implements PropertyChangeListener {
         }
     }
 }
+
