@@ -8,10 +8,6 @@ public class MenuViewModel {
     private String screen;
     private String username;
 
-    public String getScreen() {
-        return screen;
-    }
-
     public void setScreen(String screen) {
         String oldScreen = this.screen;
         this.screen = screen;
@@ -32,7 +28,4 @@ public class MenuViewModel {
         support.addPropertyChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        support.removePropertyChangeListener(listener);
-    }
 }

@@ -39,3 +39,4 @@ public class MenuPresenter implements MenuOutputBoundary {
         menuViewModel.setScreen("Login");
     }
 }
+
