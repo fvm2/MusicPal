@@ -11,11 +11,12 @@ import javax.swing.JPanel;
 
 import interface_adapter.menu.MenuController;
 import interface_adapter.menu.MenuViewModel;
+import interface_adapter.ViewManagerModel;
 
 public class MenuView extends JPanel implements PropertyChangeListener {
     private MenuController menuController;
 
-    public MenuView(MenuViewModel menuViewModel) {
+    public MenuView(MenuViewModel menuViewModel, ViewManagerModel viewManager) {
         menuViewModel.addPropertyChangeListener(this);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -29,8 +30,7 @@ public class MenuView extends JPanel implements PropertyChangeListener {
         profileButton.addActionListener(e -> {
             if (menuController != null) {
                 menuController.openProfile();
-            } else {
-                System.err.println("MenuController is not set. Cannot open Profile.");
+                viewManager.setState("Profile"); // Notify ViewManager of the state change
             }
         });
 
@@ -40,8 +40,7 @@ public class MenuView extends JPanel implements PropertyChangeListener {
         artistRecButton.addActionListener(e -> {
             if (menuController != null) {
                 menuController.openArtistRecommendations();
-            } else {
-                System.err.println("MenuController is not set. Cannot open Artist Recommendations.");
+                viewManager.setState("Artist Recommendations"); // Update state
             }
         });
 
@@ -51,8 +50,7 @@ public class MenuView extends JPanel implements PropertyChangeListener {
         songRecButton.addActionListener(e -> {
             if (menuController != null) {
                 menuController.openSongRecommendations();
-            } else {
-                System.err.println("MenuController is not set. Cannot open Song Recommendations.");
+                viewManager.setState("Song Recommendations"); // Update state
             }
         });
 
@@ -62,8 +60,7 @@ public class MenuView extends JPanel implements PropertyChangeListener {
         playlistRecButton.addActionListener(e -> {
             if (menuController != null) {
                 menuController.openPlaylistRecommendations();
-            } else {
-                System.err.println("MenuController is not set. Cannot open Playlist Recommendations.");
+                viewManager.setState("Playlist Recommendations"); // Update state
             }
         });
 
@@ -73,8 +70,7 @@ public class MenuView extends JPanel implements PropertyChangeListener {
         logoutButton.addActionListener(e -> {
             if (menuController != null) {
                 menuController.logout();
-            } else {
-                System.err.println("MenuController is not set. Cannot log out.");
+                viewManager.setState("Login"); // Update state
             }
         });
 
@@ -94,8 +90,6 @@ public class MenuView extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if ("screen".equals(evt.getPropertyName())) {
             System.out.println("Navigated to: " + evt.getNewValue());
-        } else if ("username".equals(evt.getPropertyName())) {
-            System.out.println("Username updated to: " + evt.getNewValue());
         }
     }
 }

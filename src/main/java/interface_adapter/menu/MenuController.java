@@ -21,7 +21,6 @@ public class MenuController {
     }
 
     public void openProfile() {
-        // Create Profile components
         ProfileViewModel profileViewModel = new ProfileViewModel();
         ProfilePresenter profilePresenter = new ProfilePresenter(profileViewModel);
         ProfileInteractor profileInteractor = new ProfileInteractor(profilePresenter);

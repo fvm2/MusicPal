@@ -1,21 +1,13 @@
 package interface_adapter.menu;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import interface_adapter.ViewModel;
 
-public class MenuViewModel {
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-    private String screen;
-    private String username;
+public class MenuViewModel extends ViewModel<String> {
+    private String username; // Separate field for username
 
-    public String getScreen() {
-        return screen;
-    }
-
-    public void setScreen(String screen) {
-        String oldScreen = this.screen;
-        this.screen = screen;
-        support.firePropertyChange("screen", oldScreen, screen);
+    public MenuViewModel() {
+        super("Menu");
+        this.setState("Menu");
     }
 
     public String getUsername() {
@@ -23,16 +15,16 @@ public class MenuViewModel {
     }
 
     public void setUsername(String username) {
-        String oldUsername = this.username;
         this.username = username;
-        support.firePropertyChange("username", oldUsername, username);
+        this.firePropertyChanged();
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
+    public String getScreen() {
+        return this.getState();
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        support.removePropertyChangeListener(listener);
+    public void setScreen(String screen) {
+        this.setState(screen);
+        this.firePropertyChanged();
     }
 }

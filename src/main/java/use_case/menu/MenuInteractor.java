@@ -36,3 +36,4 @@ public class MenuInteractor implements MenuInputBoundary {
         menuPresenter.logout();
     }
 }
+
