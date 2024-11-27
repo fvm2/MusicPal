@@ -1,119 +1,160 @@
-import javax.swing.*;
-import java.awt.*;
+package view;
 
-public class LoginView extends JFrame implements IObserver {
-    private JTextField nameField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
-    private IUserRepository userRepository;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-    public LoginView(IUserRepository userRepository) {
-        this.userRepository = userRepository;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-        // Basic frame setup
-        setTitle("Music Recommendation System - Login");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 200);
-        setLocationRelativeTo(null);
+import interface_adapter.login.LoginController;
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
 
-        // Create main panel with some padding
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+/**
+ * The View for when the user is logging into the program.
+ */
+public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
 
-        // Setup constraints for GridBagLayout
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
+    private final String viewName = "log in";
+    private final LoginViewModel loginViewModel;
 
-        // Add name field
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        mainPanel.add(new JLabel("Name:"), gbc);
+    private final JTextField usernameInputField = new JTextField(15);
+    private final JLabel usernameErrorField = new JLabel();
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        nameField = new JTextField(15);
-        mainPanel.add(nameField, gbc);
+    private final JPasswordField passwordInputField = new JPasswordField(15);
+    private final JLabel passwordErrorField = new JLabel();
 
-        // Add password field
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        mainPanel.add(new JLabel("Password:"), gbc);
+    private final JButton logIn;
+    private final JButton cancel;
+    private LoginController loginController;
 
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        passwordField = new JPasswordField(15);
-        mainPanel.add(passwordField, gbc);
+    public LoginView(LoginViewModel loginViewModel) {
 
-        // Add login button
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        loginButton = new JButton("Login");
-        mainPanel.add(loginButton, gbc);
+        this.loginViewModel = loginViewModel;
+        this.loginViewModel.addPropertyChangeListener(this);
 
-        // Add action listener for login button
-        loginButton.addActionListener(e -> handleLogin());
+        final JLabel title = new JLabel("Login Screen");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add panel to frame
-        add(mainPanel);
-    }
+        final LabelTextPanel usernameInfo = new LabelTextPanel(
+                new JLabel("Username"), usernameInputField);
+        final LabelTextPanel passwordInfo = new LabelTextPanel(
+                new JLabel("Password"), passwordInputField);
 
-    private void handleLogin() {
-        String name = nameField.getText();
-        String password = new String(passwordField.getPassword());
+        final JPanel buttons = new JPanel();
+        logIn = new JButton("log in");
+        buttons.add(logIn);
+        cancel = new JButton("cancel");
+        buttons.add(cancel);
 
-        if (name.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please fill in all fields",
-                    "Login Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        logIn.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(logIn)) {
+                            final LoginState currentState = loginViewModel.getState();
 
-        try {
-            User user = userRepository.findById(name);
-            if (user != null) {
-                // In a real application, you would verify the password here
-                // For now, we're just checking if user exists
-                openMainView(user);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Invalid credentials",
-                        "Login Error",
-                        JOptionPane.ERROR_MESSAGE);
+                            loginController.execute(
+                                    currentState.getUsername(),
+                                    currentState.getPassword()
+                            );
+                        }
+                    }
+                }
+        );
+
+        cancel.addActionListener(this);
+
+        usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void documentListenerHelper() {
+                final LoginState currentState = loginViewModel.getState();
+                currentState.setUsername(usernameInputField.getText());
+                loginViewModel.setState(currentState);
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "An error occurred during login",
-                    "Login Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void documentListenerHelper() {
+                final LoginState currentState = loginViewModel.getState();
+                currentState.setPassword(new String(passwordInputField.getPassword()));
+                loginViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+
+        this.add(title);
+        this.add(usernameInfo);
+        this.add(usernameErrorField);
+        this.add(passwordInfo);
+        this.add(buttons);
     }
 
-    private void openMainView(User user) {
-        // Here you would initialize and show your main view/menu
-        // For example:
-        // MenuView menuView = new MenuView(user);
-        // menuView.setVisible(true);
-        dispose(); // Close login window
+    /**
+     * React to a button click that results in evt.
+     * @param evt the ActionEvent to react to
+     */
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("Click " + evt.getActionCommand());
     }
 
     @Override
-    public void update(String message) {
-        // Handle any updates from the subject
-        // You might want to show status messages or handle errors
-        JOptionPane.showMessageDialog(this, message);
+    public void propertyChange(PropertyChangeEvent evt) {
+        final LoginState state = (LoginState) evt.getNewValue();
+        setFields(state);
+        usernameErrorField.setText(state.getLoginError());
     }
 
-    // Example of how to launch the login view
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            IUserRepository userRepository = new PostgresUserRepository();
-            LoginView loginView = new LoginView(userRepository);
-            loginView.setVisible(true);
-        });
+    private void setFields(LoginState state) {
+        usernameInputField.setText(state.getUsername());
+        passwordInputField.setText(state.getPassword());
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
     }
 }
