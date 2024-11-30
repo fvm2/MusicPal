@@ -1,8 +1,5 @@
 package main;
 
-import application.RecommendationService;
-import entity.ports.IOpenAIService;
-import infrastructure.api.OpenAIService;
 import presentation.MusicRecommendationGUI;
 
 public class Application {
