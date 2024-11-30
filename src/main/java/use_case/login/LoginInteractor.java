@@ -6,12 +6,9 @@ import entity.User;
  * The Login Interactor.
  */
 public class LoginInteractor implements LoginInputBoundary {
-    private final LoginUserDataAccessInterface userDataAccessObject;
     private final LoginOutputBoundary loginPresenter;
 
-    public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
-                           LoginOutputBoundary loginOutputBoundary) {
-        this.userDataAccessObject = userDataAccessInterface;
+    public LoginInteractor(LoginOutputBoundary loginOutputBoundary) {
         this.loginPresenter = loginOutputBoundary;
     }
 
@@ -19,20 +16,21 @@ public class LoginInteractor implements LoginInputBoundary {
     public void execute(LoginInputData loginInputData) {
         final String username = loginInputData.getUsername();
         final String password = loginInputData.getPassword();
-        if (!userDataAccessObject.existsByName(username)) {
+        // TODO: Check if user is registered.
+        if (1 == 1) {
             loginPresenter.prepareFailView(username + ": Account does not exist.");
         }
         else {
-            final String pwd = userDataAccessObject.get(username).getPassword();
+            final String pwd = "user password fetched from the db.";
             if (!password.equals(pwd)) {
                 loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
             }
             else {
 
-                final User user = userDataAccessObject.get(loginInputData.getUsername());
+                // TODO: Get the user from the database.
+                final User user = User();
 
-                userDataAccessObject.setCurrentUsername(user.getName());
-                final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
+                final LoginOutputData loginOutputData = new LoginOutputData(user.getName());
                 loginPresenter.prepareSuccessView(loginOutputData);
             }
         }

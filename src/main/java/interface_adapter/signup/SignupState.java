@@ -10,6 +10,26 @@ public class SignupState {
     private String passwordError;
     private String repeatPassword = "";
     private String repeatPasswordError;
+    private String surname  ="";
+    private String country = "";
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+
 
     public String getUsername() {
         return username;
