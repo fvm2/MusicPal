@@ -1,32 +1,38 @@
 package infrastructure.api;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.ports.IOpenAIService;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.assistant.*;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+/**
+ * Placeholder for Checkstyle.
+ */
 public class OpenAIService implements IOpenAIService {
-    private final SimpleOpenAI openAI;
+    private final SimpleOpenAI openAi;
     private String assistantId;
     private final ObjectMapper objectMapper;
 
     public OpenAIService(String apiKey) {
-        this.openAI = SimpleOpenAI.builder()
+        this.openAi = SimpleOpenAI.builder()
                 .apiKey(apiKey)
                 .build();
         this.objectMapper = new ObjectMapper();
     }
 
+    /**
+     * Runs the assistant, via calling the API.
+     */
     public void initialize() {
         createAssistant();
     }
 
     private void createAssistant() {
         try {
-            var assistant = openAI.assistants()
+            final var assistant = openAi.assistants()
                     .create(AssistantRequest.builder()
                             .name("Music Recommendation Engine")
                             .model("gpt-4o-mini")
@@ -64,50 +70,52 @@ public class OpenAIService implements IOpenAIService {
                     .join();
 
             this.assistantId = assistant.getId();
-        } catch (Exception e) {
-            throw new RuntimeException("Error creating assistant: " + e.getMessage());
+        }
+        catch (Exception exception) {
+            throw new RuntimeException("Error creating assistant: " + exception.getMessage());
         }
     }
 
     @Override
-    public String getRecommendationsFromAI(String input) {
+    public String getRecommendationsFromAi(String input) {
         try {
-            var thread = openAI.threads()
+            final var thread = openAi.threads()
                     .create(ThreadRequest.builder().build())
                     .join();
-            String threadId = thread.getId();
+            final String threadId = thread.getId();
 
-            openAI.threadMessages()
+            openAi.threadMessages()
                     .create(threadId, ThreadMessageRequest.builder()
                             .role(ThreadMessageRole.USER)
                             .content(input)
                             .build())
                     .join();
 
-            var runStream = openAI.threadRuns()
+            final var runStream = openAi.threadRuns()
                     .createStream(threadId, ThreadRunRequest.builder()
                             .assistantId(assistantId)
                             .build())
                     .join();
 
-            StringBuilder response = new StringBuilder();
+            final StringBuilder response = new StringBuilder();
             runStream.forEach(event -> {
                 if (event.getData() != null) {
                     response.append(event.getData().toString());
                 }
             });
 
-            openAI.threads().delete(threadId).join();
+            openAi.threads().delete(threadId).join();
             return extractJsonFromResponse(response.toString());
-        } catch (Exception e) {
-            throw new RuntimeException("Error getting recommendations: " + e.getMessage());
+        }
+        catch (Exception exception) {
+            throw new RuntimeException("Error getting recommendations: " + exception.getMessage());
         }
     }
 
     private String extractJsonFromResponse(String response) {
         // Look for content within the last "value=" in the response
-        Pattern pattern = Pattern.compile("value=\\[\\s*\\{.*?\\}\\s*\\]", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(response);
+        final Pattern pattern = Pattern.compile("value=\\[\\s*\\{.*?\\}\\s*\\]", Pattern.DOTALL);
+        final Matcher matcher = pattern.matcher(response);
 
         String jsonStr = null;
         while (matcher.find()) {
@@ -123,9 +131,12 @@ public class OpenAIService implements IOpenAIService {
         return null;
     }
 
+    /**
+     * Finalizes connection with the API.
+     */
     public void cleanup() {
         if (assistantId != null) {
-            openAI.assistants().delete(assistantId).join();
+            openAi.assistants().delete(assistantId).join();
         }
     }
 }
