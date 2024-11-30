@@ -1,38 +1,30 @@
-package infrastructure.api;
+package service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.assistant.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import entity.ports.IOpenAIService;
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.assistant.*;
-
-/**
- * Placeholder for Checkstyle.
- */
-public class OpenAIService implements IOpenAIService {
-    private final SimpleOpenAI openAi;
+public class OpenAIService {
+    private final SimpleOpenAI openAI;
     private String assistantId;
     private final ObjectMapper objectMapper;
 
     public OpenAIService(String apiKey) {
-        this.openAi = SimpleOpenAI.builder()
+        this.openAI = SimpleOpenAI.builder()
                 .apiKey(apiKey)
                 .build();
         this.objectMapper = new ObjectMapper();
     }
 
-    /**
-     * Runs the assistant, via calling the API.
-     */
     public void initialize() {
         createAssistant();
     }
 
     private void createAssistant() {
         try {
-            final var assistant = openAi.assistants()
+            var assistant = openAI.assistants()
                     .create(AssistantRequest.builder()
                             .name("Music Recommendation Engine")
                             .model("gpt-4o-mini")
@@ -70,73 +62,71 @@ public class OpenAIService implements IOpenAIService {
                     .join();
 
             this.assistantId = assistant.getId();
-        }
-        catch (Exception exception) {
-            throw new RuntimeException("Error creating assistant: " + exception.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create assistant: " + e.getMessage());
         }
     }
 
-    @Override
-    public String getRecommendationsFromAi(String input) {
+    public String createThread() {
         try {
-            final var thread = openAi.threads()
+            var thread = openAI.threads()
                     .create(ThreadRequest.builder().build())
                     .join();
-            final String threadId = thread.getId();
+            return thread.getId();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create thread: " + e.getMessage());
+        }
+    }
 
-            openAi.threadMessages()
+    public String getRecommendationsFromAI(String input, String threadId) {
+        try {
+            openAI.threadMessages()
                     .create(threadId, ThreadMessageRequest.builder()
                             .role(ThreadMessageRole.USER)
                             .content(input)
                             .build())
                     .join();
 
-            final var runStream = openAi.threadRuns()
+            var runStream = openAI.threadRuns()
                     .createStream(threadId, ThreadRunRequest.builder()
                             .assistantId(assistantId)
                             .build())
                     .join();
 
-            final StringBuilder response = new StringBuilder();
+            StringBuilder response = new StringBuilder();
             runStream.forEach(event -> {
                 if (event.getData() != null) {
                     response.append(event.getData().toString());
                 }
             });
 
-            openAi.threads().delete(threadId).join();
             return extractJsonFromResponse(response.toString());
-        }
-        catch (Exception exception) {
-            throw new RuntimeException("Error getting recommendations: " + exception.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get recommendations: " + e.getMessage());
         }
     }
 
     private String extractJsonFromResponse(String response) {
-        // Look for content within the last "value=" in the response
-        final Pattern pattern = Pattern.compile("value=\\[\\s*\\{.*?\\}\\s*\\]", Pattern.DOTALL);
-        final Matcher matcher = pattern.matcher(response);
+        Pattern pattern = Pattern.compile("value=\\[\\s*\\{.*?\\}\\s*\\]", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(response);
 
-        String jsonStr = null;
-        while (matcher.find()) {
-            jsonStr = matcher.group();
+        if (matcher.find()) {
+            return matcher.group().substring(6);
         }
-
-        if (jsonStr != null) {
-            // Remove the "value=" prefix
-            jsonStr = jsonStr.substring(6);
-            return jsonStr;
-        }
-
         return null;
     }
 
-    /**
-     * Finalizes connection with the API.
-     */
+    public void deleteThread(String threadId) {
+        try {
+            openAI.threads().delete(threadId).join();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete thread: " + e.getMessage());
+        }
+    }
+
     public void cleanup() {
         if (assistantId != null) {
-            openAi.assistants().delete(assistantId).join();
+            openAI.assistants().delete(assistantId).join();
         }
     }
 }

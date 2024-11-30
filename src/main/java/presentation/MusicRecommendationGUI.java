@@ -6,10 +6,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import entity.UserPreferences;
-import entity.Recommendation;
-import application.RecommendationService;
-
 public class MusicRecommendationGUI {
     private final RecommendationService recommendationService;
     private UserPreferences userPreferences;
