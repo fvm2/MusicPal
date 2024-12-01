@@ -1,11 +1,11 @@
-package use_case.profile;
+package interface_adapter.profile;
 
 import java.util.List;
 
 /**
- * Output data for the Profile feature.
+ * State class for the Profile ViewModel.
  */
-public class ProfileOutputData {
+public class ProfileState {
     private String username;
     private List<String> favorites;
     private List<String> friends;

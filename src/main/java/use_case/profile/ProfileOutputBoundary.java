@@ -1,9 +1,9 @@
 package use_case.profile;
 
+/**
+ * Output boundary for the Profile feature.
+ */
 public interface ProfileOutputBoundary {
-
-    void showFavorites(ProfileInputData profileInputData);
-    void showFriends(ProfileInputData profileInputData);
-
+    void presentProfile(ProfileOutputData outputData);
     void logout();
 }

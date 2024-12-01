@@ -85,4 +85,23 @@ public class UserService {
             return Result.failure("Failed to send friend request: " + e.getMessage());
         }
     }
+
+    public Result<User> findByEmail(String email) {
+        try {
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            return userOptional.map(Result::success).orElseGet(() ->
+                    Result.failure("User not found with email: " + email));
+        } catch (Exception e) {
+            return Result.failure("Failed to find user by email: " + e.getMessage());
+        }
+    }
+    public Result<User> findById(int id) {
+        try {
+            Optional<User> userOptional = userRepository.findById(id);
+            return userOptional.map(Result::success).orElseGet(() ->
+                    Result.failure("User not found with ID: " + id));
+        } catch (Exception e) {
+            return Result.failure("Failed to find user by ID: " + e.getMessage());
+        }
+    }
 }
