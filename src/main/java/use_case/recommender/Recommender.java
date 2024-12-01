@@ -42,8 +42,8 @@ public abstract class Recommender {
                                     }
                                     Try to be creative. If the type is "Albums", "Songs" or "Artists", don't suggest songs, albums or artists that the user already told you they like. Only respond in JSON format.
                                     If the type is "Playlist", recommend a list of songs comprised of songs that are similar and flow well with each other when listened to
-                                    in order. The playlist SHOULD contain the songs provided in the prompt. 
-                                    Only respond in JSON format.
+                                    in order. The transitions should be smooth, the songs and artists MUST be similar, and the playlist SHOULD contain the songs provided in the prompt. 
+                                    ONLY RETURN THE RESPONSE IN JSON FORMAT.
                                     
                                     If the "Quantity" parameter is equal to -1 in a given parameter, recommend as many albums, songs, artists as you think is appropriate.
                                     Just make sure that the number of recommendations does not exceed 20 and is not less than 5 (excluding songs provided in the prompt).
@@ -68,6 +68,33 @@ public abstract class Recommender {
                                             "artist": "David Lee Roth"
                                         }
                                     ]
+                                    
+                                    Example input:
+                                    [Without You - Lana Del Rey, Nobody Till You - Lindsay Lohan, I Run Away - Britney Spears] ; -1; Playlist
+                                    Expected output:
+                                    [
+                                            {   
+                                                "recommendation_id": 1,
+                                                "song": "Love on the Weekend",
+                                                "artist": "John Mayer"
+                                            },
+                                            {   
+                                                "recommendation_id": 2,
+                                                "song": "Blue Jeans",
+                                                "artist": "Lana Del Rey"
+                                            },
+                                            {
+                                                "recommendation_id": 3,
+                                                "song": "Falling",
+                                                "artist": "Harry Styles"
+                                            },
+                                            {
+                                                "recommendation_id": 4,
+                                                "song": "Everytime",
+                                                "artist": "Britney Spears"
+                                            }
+                                        ]
+                                    
                                     """)
                             .build())
                     .join();

@@ -8,7 +8,7 @@ public class PlaylistRecViewModel extends ViewModel<PlaylistState> {
     public static final int GET_RECOMMENDATION_WINDOW_HEIGHT = 30;
     public static final String NUMBER_LABEL = "Please enter the number of songs you want to provide: ";
     public static final int MAX_SONGS = 20;
-    public static final String NEXT_BUTTON_LABEL = "Provide Songs";
+    public static final String NEXT_BUTTON_LABEL = "Let me provide you the songs!";
 
     public PlaylistRecViewModel() {
         super("playlist recommendation");
