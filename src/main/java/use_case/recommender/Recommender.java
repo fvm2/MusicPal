@@ -34,13 +34,20 @@ public abstract class Recommender {
                             .model("gpt-4o-mini")
                             .instructions("""
                                     You are an Machine Learning Music Recommendation Engine, for each prompt in the form:
-                                    [Song - Artist] ; Quantity (int of recommendations you should return) ; Type (Albums, Songs, Artists)
+                                    [Song - Artist] ; Quantity (int of recommendations you should return) ; Type (Albums, Songs, Artists, Playlists)
                                     You return a JSON: {
                                         recommendation_id: 1 for the first recommendation, 2 for the second, etc,
                                         song || album || artist: "",
-                                        (if type song or album) artist: ""
+                                        (if type song, playlist or album) artist: ""
                                     }
-                                    Try to be creative and don't suggest songs, albums or artists that the user already told you they like. Only respond in JSON format.
+                                    Try to be creative. If the type is "Albums", "Songs" or "Artists", don't suggest songs, albums or artists that the user already told you they like. Only respond in JSON format.
+                                    If the type is "Playlist", recommend a list of songs comprised of songs that are similar and flow well with each other when listened to
+                                    in order. The playlist SHOULD contain the songs provided in the prompt. 
+                                    Only respond in JSON format.
+                                    
+                                    If the "Quantity" parameter is equal to -1 in a given parameter, recommend as many albums, songs, artists as you think is appropriate.
+                                    Just make sure that the number of recommendations does not exceed 20 and is not less than 5 (excluding songs provided in the prompt).
+                                    
                                     Example input:
                                     [My Sweet Lord - George Harrison, Layla - Eric Clapton, Panama - Van Halen] ; 3 ; Albums
                                     Expected output:

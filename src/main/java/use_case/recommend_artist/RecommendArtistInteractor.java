@@ -27,7 +27,7 @@ public class RecommendArtistInteractor extends Recommender implements RecommendA
 
     public void execute(RecommendArtistInputData recommendArtistInputData) {
         final String artist = recommendArtistInputData.getArtistName();
-        final String input = "[" + artist + "] ; 5 ; Artists";
+        final String input = "[" + artist + "] ; -1 ; Artists";
         final String recommendations = getRecommendationsAsString(input);
         final RecommendArtistOutputData recommendArtistOutputData = new RecommendArtistOutputData(recommendations);
         recommendArtistPresenter.showRecommendations(recommendArtistOutputData);

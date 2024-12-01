@@ -32,7 +32,7 @@ public class RecommendPlaylistInteractor extends Recommender implements Recommen
 
     public void execute(RecommendPlaylistInputData recommendPlaylistInputData) {
         final List<String> songs = recommendPlaylistInputData.getSongs();
-        final String input = "[" + String.join(", ", songs) + "] ; 10 ; Songs";
+        final String input = "[" + String.join(", ", songs) + "] ; -1 ; Playlist";
         final String recommendations = getRecommendationsAsString(input);
         final RecommendPlaylistOutputData recommendPlaylistOutputData = new RecommendPlaylistOutputData(recommendations);
         recommendPlaylistPresenter.showRecommendations(recommendPlaylistOutputData);
