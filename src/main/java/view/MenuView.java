@@ -34,7 +34,6 @@ public class MenuView extends JPanel implements PropertyChangeListener {
             }
         });
 
-
         add(title);
         add(profileButton);
     }
