@@ -9,12 +9,18 @@ import interface_adapter.artist_recommendation.ArtistRecViewModel;
 import interface_adapter.menu.MenuController;
 import interface_adapter.menu.MenuPresenter;
 import interface_adapter.menu.MenuViewModel;
+import interface_adapter.playlist.PlaylistController;
+import interface_adapter.playlist.PlaylistPresenter;
+import interface_adapter.playlist.PlaylistRecViewModel;
 import use_case.menu.MenuInputBoundary;
 import use_case.menu.MenuInteractor;
 import use_case.menu.MenuOutputBoundary;
 import use_case.recommend_artist.RecommendArtistInputBoundary;
 import use_case.recommend_artist.RecommendArtistInteractor;
 import use_case.recommend_artist.RecommendArtistOutputBoundary;
+import use_case.recommend_playlist.RecommendPlaylistInputBoundary;
+import use_case.recommend_playlist.RecommendPlaylistInteractor;
+import use_case.recommend_playlist.RecommendPlaylistOutputBoundary;
 import view.*;
 
 import javax.swing.*;
@@ -32,6 +38,8 @@ public class AppBuilder {
     private ArtistRecViewModel artistRecViewModel;
     private MenuView menuView;
     private MenuViewModel menuViewModel;
+    private PlaylistRecView playlistRecView;
+    private PlaylistRecViewModel playlistRecViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -41,6 +49,13 @@ public class AppBuilder {
         artistRecViewModel = new ArtistRecViewModel();
         artistRecView = new ArtistRecView(artistRecViewModel);
         cardPanel.add(artistRecView, artistRecView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addPlaylistRecView() {
+        playlistRecViewModel = new PlaylistRecViewModel();
+        playlistRecView = new PlaylistRecView(playlistRecViewModel);
+        cardPanel.add(playlistRecView, playlistRecView.getViewName());
         return this;
     }
 
@@ -57,6 +72,15 @@ public class AppBuilder {
 
         final ArtistController controller = new ArtistController(recommendArtistInteractor);
         artistRecView.setController(controller);
+        return this;
+    }
+
+    public AppBuilder addPlaylistUseCase() {
+        final RecommendPlaylistOutputBoundary recommendPlaylistOutputBoundary = new PlaylistPresenter(playlistRecViewModel, viewManagerModel, menuViewModel);
+        final RecommendPlaylistInputBoundary recommendPlaylistInteractor = new RecommendPlaylistInteractor(dbDataAccessObject, recommendPlaylistOutputBoundary);
+
+        final PlaylistController controller = new PlaylistController(recommendPlaylistInteractor);
+        playlistRecView.setController(controller);
         return this;
     }
 

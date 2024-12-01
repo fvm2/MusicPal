@@ -12,4 +12,8 @@ public class MenuController {
     public void switchToArtistRecView() {
         menuInteractor.switchToArtistRecView();
     }
+
+    public void switchToPlaylistRecView() {
+        menuInteractor.switchToPlaylistRecView();
+    }
 }

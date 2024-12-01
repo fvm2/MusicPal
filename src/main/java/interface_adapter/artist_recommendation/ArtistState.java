@@ -1,7 +1,7 @@
 package interface_adapter.artist_recommendation;
 
 /**
- * The state for the Signup View Model.
+ * The state for the Artist View Model.
  */
 public class ArtistState {
     private String artistName;

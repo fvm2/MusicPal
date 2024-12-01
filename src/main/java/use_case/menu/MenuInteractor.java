@@ -12,4 +12,9 @@ public class MenuInteractor implements MenuInputBoundary {
         menuPresenter.switchToArtistRecView();
     }
 
+    @Override
+    public void switchToPlaylistRecView() {
+        menuPresenter.switchToPlaylistRecView();
+    }
+
 }

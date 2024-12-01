@@ -4,4 +4,5 @@ public interface MenuInputBoundary {
 
     void switchToArtistRecView();
 
+    void switchToPlaylistRecView();
 }

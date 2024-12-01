@@ -7,8 +7,10 @@ public class Main {
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder
                 .addArtistRecView()
+                .addPlaylistRecView()
                 .addMenuView()
                 .addArtistRecUseCase()
+                .addPlaylistUseCase()
                 .addMenuUseCase()
                 .build();
         application.pack();

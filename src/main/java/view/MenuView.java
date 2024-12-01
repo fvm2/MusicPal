@@ -39,7 +39,13 @@ public class MenuView extends JPanel implements ActionListener, PropertyChangeLi
 
         profile.addActionListener(this);
         songRec.addActionListener(this);
-        playlistRec.addActionListener(this);
+        playlistRec.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        menuController.switchToPlaylistRecView();
+                    }
+                }
+        );
         artistRec.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
