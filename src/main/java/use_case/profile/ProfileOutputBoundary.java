@@ -1,4 +1,9 @@
 package use_case.profile;
 
-public class ProfileOutputBoundary {
+public interface ProfileOutputBoundary {
+
+    void showFavorites(ProfileInputData profileInputData);
+    void showFriends(ProfileInputData profileInputData);
+
+    void logout();
 }
