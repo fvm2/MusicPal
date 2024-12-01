@@ -1,29 +1,19 @@
 package use_case.signup;
 
-import entity.User;
-
 /**
  * The Signup Interactor.
  */
 public class SignupInteractor implements SignupInputBoundary {
-    private final SignupUserDataAccessInterface userDataAccessObject;
     private final SignupOutputBoundary userPresenter;
-    private final UserFactory userFactory;
 
-    public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
-                            SignupOutputBoundary signupOutputBoundary,
-                            UserFactory userFactory) {
-        this.userDataAccessObject = signupDataAccessInterface;
+    public SignupInteractor(SignupOutputBoundary signupOutputBoundary) {
         this.userPresenter = signupOutputBoundary;
-        this.userFactory = userFactory;
     }
 
     @Override
     public void execute(SignupInputData signupInputData) {
-        // TODO: Check to see if the user is already registered.
-//        if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
-//            userPresenter.prepareFailView("User already exists.");
-//        }
+
+        // TODO: Check to see if the user is already registered. In that case, send the user to login page.
         if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
             userPresenter.prepareFailView("Passwords don't match.");
         }
@@ -31,7 +21,7 @@ public class SignupInteractor implements SignupInputBoundary {
             final User user = new User(signupInputData.getUsername(), signupInputData.getSurname(),
                     signupInputData.getCountry(), signupInputData.getPassword());
 
-            final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);
+            final SignupOutputData signupOutputData = new SignupOutputData(user.getName());
             userPresenter.prepareSuccessView(signupOutputData);
         }
     }
