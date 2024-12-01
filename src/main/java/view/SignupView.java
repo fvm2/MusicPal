@@ -47,7 +47,7 @@ public class SignupView {
                 this.email = emailField.getText();
                 this.password = passwordField.getText();
                 frame.dispose();
-                final MenuView menuView = new MenuView();
+                // final MenuView menuView = new MenuView();
             } else {
                 JOptionPane.showMessageDialog(frame, "Please fill in all fields");
             }

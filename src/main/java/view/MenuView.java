@@ -1,48 +1,73 @@
 package view;
 
+import interface_adapter.menu.MenuController;
+import interface_adapter.menu.MenuViewModel;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class MenuView {
-    public MenuView() {
-        showMenuGUI();
+public class MenuView extends JPanel implements ActionListener, PropertyChangeListener {
+    private final String viewName = "menu";
+
+    private final MenuViewModel menuViewModel;
+    private final JButton profile;
+    private final JButton songRec;
+    private final JButton playlistRec;
+    private final JButton artistRec;
+    private MenuController menuController;
+
+    public MenuView(MenuViewModel menuViewModel) {
+        this.menuViewModel = menuViewModel;
+        menuViewModel.addPropertyChangeListener(this);
+
+        final JLabel title = new JLabel(MenuViewModel.TITLE_LABEL);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        final JPanel buttons = new JPanel();
+        profile = new JButton(MenuViewModel.PROFILE_LABEL);
+        buttons.add(profile);
+        songRec = new JButton(MenuViewModel.SONG_REC_LABEL);
+        buttons.add(songRec);
+        playlistRec = new JButton(MenuViewModel.PLAYLIST_REC_LABEL);
+        buttons.add(playlistRec);
+        artistRec = new JButton(MenuViewModel.ARTIST_REC_LABEL);
+        buttons.add(artistRec);
+
+        profile.addActionListener(this);
+        songRec.addActionListener(this);
+        playlistRec.addActionListener(this);
+        artistRec.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        menuController.switchToArtistRecView();
+                    }
+                }
+        );
+
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+        this.add(title);
+        this.add(buttons);
     }
 
-    private void showMenuGUI() {
-        JFrame frame = new JFrame("Music Recommendation System - Menu");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new GridBagLayout());
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "");
+    }
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+    }
 
-        JButton preferencesButton = new JButton("Enter Preferences");
-        JButton similarArtistsButton = new JButton("Find Similar Artists");
-        JButton playlistButton = new JButton("Generate Playlist");
+    public String getViewName() {
+        return viewName;
+    }
 
-        frame.add(preferencesButton, gbc);
-        frame.add(similarArtistsButton, gbc);
-        frame.add(playlistButton, gbc);
-
-        preferencesButton.addActionListener(e -> {
-            frame.dispose();
-            final SongRecView songRecView = new SongRecView();
-        });
-
-        similarArtistsButton.addActionListener(e -> {
-            frame.dispose();
-            final ArtistRecView artistRecView = new ArtistRecView();
-        });
-
-        playlistButton.addActionListener(e -> {
-            frame.dispose();
-            final PlaylistRecView playlistRecView = new PlaylistRecView();
-        });
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    public void setController(MenuController menuController) {
+        this.menuController = menuController;
     }
 }

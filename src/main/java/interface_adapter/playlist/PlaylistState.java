@@ -1,4 +1,4 @@
 package interface_adapter.playlist;
 
-public class PlaylistViewModel {
+public class PlaylistState {
 }

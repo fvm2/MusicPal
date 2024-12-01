@@ -1,4 +1,4 @@
 package data_access;
 
-public class DBDataAccessObject extends DataAccessObject {
+public class DBDataAccessObject implements DataAccessInterface {
 }

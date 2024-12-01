@@ -1,8 +1,8 @@
-package interface_adapter.artist_recommendation;
+package interface_adapter.playlist;
 
 import interface_adapter.ViewModel;
 
-public class ArtistRecViewModel extends ViewModel<ArtistState> {
+public class PlaylistRecViewModel extends ViewModel<PlaylistState> {
     public static final String TITLE_LABEL = "Artist Recommendation";
     public static final String ARTIST_LABEL = "Please enter an artist:";
     public static final String GET_RECOMMENDATION_BUTTON_LABEL = "Get Recommendation";
@@ -10,9 +10,9 @@ public class ArtistRecViewModel extends ViewModel<ArtistState> {
     public static final int GET_RECOMMENDATION_WINDOW_WIDTH = 10;
     public static final int GET_RECOMMENDATION_WINDOW_HEIGHT = 30;
 
-    public ArtistRecViewModel() {
+    public PlaylistRecViewModel() {
         super("artist recommendation");
-        setState(new ArtistState());
+        setState(new PlaylistState());
     }
 
 }

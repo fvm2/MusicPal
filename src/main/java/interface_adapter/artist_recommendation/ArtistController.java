@@ -15,4 +15,12 @@ public class ArtistController {
 
         recommendArtistInteractor.execute(recommendArtistInputData);
     }
+
+    public void switchToRecView() {
+        recommendArtistInteractor.switchToRecView();
+    }
+
+    public void switchToMenuView() {
+        recommendArtistInteractor.switchToMenuView();
+    }
 }

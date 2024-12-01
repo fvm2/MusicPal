@@ -1,61 +1,132 @@
 package view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import java.awt.Component;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import interface_adapter.artist_recommendation.ArtistController;
 import interface_adapter.artist_recommendation.ArtistRecViewModel;
+import interface_adapter.artist_recommendation.ArtistState;
 
-import javax.swing.*;
-import java.awt.*;
+public class ArtistRecView extends JPanel implements ActionListener, PropertyChangeListener {
+    private final String viewName = "artist recommendation";
 
-public class ArtistRecView {
-    private final ArtistController artistController;
     private final ArtistRecViewModel artistRecViewModel;
+    private ArtistController artistController;
 
-    public ArtistRecView(String recommendations) {
-        
-    }
+    private final JButton getRecommendation;
+    private final JTextField artistInputField = new JTextField(20);
 
-    private void showSimilarArtistsGUI(String recommendations) {
-        JFrame frame = new JFrame("Find Similar Artists");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new GridBagLayout());
+    public ArtistRecView(ArtistRecViewModel artistRecViewModel) {
+        this.artistRecViewModel = artistRecViewModel;
+        artistRecViewModel.addPropertyChangeListener(this);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
+        final JLabel title = new JLabel(ArtistRecViewModel.TITLE_LABEL);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel artistLabel = new JLabel("Enter an artist:");
-        JTextField artistField = new JTextField(20);
-        JButton findButton = new JButton("Find Similar Artists");
-        JTextArea resultArea = new JTextArea(10, 30);
+        final JPanel artistInfo = new JPanel();
+        final JLabel artistLabel = new JLabel(ArtistRecViewModel.ARTIST_LABEL);
+        artistInfo.add(artistLabel);
+        artistInfo.add(artistInputField);
+
+        final JPanel buttons = new JPanel();
+        getRecommendation = new JButton(ArtistRecViewModel.GET_RECOMMENDATION_BUTTON_LABEL);
+        buttons.add(getRecommendation);
+
+        final JTextArea resultArea = new JTextArea(ArtistRecViewModel.GET_RECOMMENDATION_WINDOW_WIDTH, ArtistRecViewModel.GET_RECOMMENDATION_WINDOW_HEIGHT);
         resultArea.setEditable(false);
 
-        frame.add(artistLabel, gbc);
-        frame.add(artistField, gbc);
-        frame.add(findButton, gbc);
-        frame.add(new JScrollPane(resultArea), gbc);
+        artistInfo.add(resultArea);
+        final JButton backToMenu = new JButton(ArtistRecViewModel.MENU_LABEL);
+        buttons.add(backToMenu);
+        backToMenu.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(backToMenu)) {
+                            artistController.switchToMenuView();
+                        }
+                    }
+                }
+        );
 
-        findButton.addActionListener(e -> {
-            String artist = artistField.getText().trim();
-            if (artist.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Please enter an artist name.");
-            } else {
-                final ArtistController artistController = new ArtistController(artist);
+        getRecommendation.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(getRecommendation)) {
+                            final ArtistState currentState = artistRecViewModel.getState();
 
-                String similarArtists = engine.getSimilarArtists(artist);
-                resultArea.setText("Artists similar to " + artist + ":\n\n" + similarArtists);
+                            artistController.execute(currentState.getArtistName());
+                            final String recommendations = artistRecViewModel.getState().getRecommendation();
+                            resultArea.setText(recommendations);
+                        }
+                    }
+                }
+        );
+
+        addArtistListener();
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        this.add(title);
+        this.add(artistInfo);
+        this.add(buttons);
+    }
+
+    private void addArtistListener() {
+        artistInputField.getDocument().addDocumentListener(new DocumentListener() {
+            private void documentListenerHelper() {
+                final ArtistState currentState = artistRecViewModel.getState();
+                currentState.setArtistName(artistInputField.getText());
+                artistRecViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
             }
         });
-
-        JButton backButton = new JButton("Back to Menu");
-        backButton.addActionListener(e -> {
-            frame.dispose();
-            final MenuView menuView = new MenuView();
-        });
-
-        frame.add(backButton, gbc);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "Cancel not implemented yet.");
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final ArtistState state = (ArtistState) evt.getNewValue();
+        if (state.getArtistNameError() != null) {
+            JOptionPane.showMessageDialog(this, state.getArtistNameError());
+        }
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setController(ArtistController controller) {
+        this.artistController = controller;
+    }
+
 }

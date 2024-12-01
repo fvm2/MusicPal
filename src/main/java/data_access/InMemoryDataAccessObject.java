@@ -1,4 +1,4 @@
 package data_access;
 
-public class InMemoryDataAccessObject extends DataAccessObject {
+public class InMemoryDataAccessObject implements DataAccessInterface {
 }
