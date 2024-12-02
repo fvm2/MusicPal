@@ -21,16 +21,19 @@ public class MenuPresenter implements MenuOutputBoundary {
         this.songRecViewModel = new SongRecViewModel();
     }
 
+    @Override
     public void switchToArtistRecView() {
         viewManagerModel.setState(artistRecViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
+    @Override
     public void switchToPlaylistRecView() {
         viewManagerModel.setState(playlistRecViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
+    @Override
     public void switchToSongRecView() {
         viewManagerModel.setState(songRecViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
