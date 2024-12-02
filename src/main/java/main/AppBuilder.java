@@ -19,6 +19,9 @@ import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import service.PreferenceService;
 import service.RecommendationService;
+import interface_adapter.signup.SignupController;
+import interface_adapter.signup.SignupPresenter;
+import interface_adapter.signup.SignupViewModel;
 import service.UserService;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
@@ -42,8 +45,10 @@ import view.SignupView;
 
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
+    private final CardLayout cardLayout = new CardLayout();
 
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+  
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -55,12 +60,18 @@ public class AppBuilder {
     private final UserService userService;
     private final RecommendationService recommendationService;
     private final PreferenceService preferenceService;
-
+  
+    /**
+    * Constructs an AppBuilder with the necessary services.
+    *
+    * @param userService            the UserService instance
+    * @param preferenceService      the PreferenceService instance
+    * @param recommendationService  the RecommendationService instance
+    */
     public AppBuilder(UserService userService, PreferenceService preferenceService, RecommendationService recommendationService) {
         this.userService = userService;
         this.recommendationService = recommendationService;
         this.preferenceService = preferenceService;
-        CardLayout cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
     }
 
@@ -125,7 +136,12 @@ public class AppBuilder {
         loginView.setLoginController(loginController);
         return this;
     }
-
+  
+    /**
+    * Adds the Profile Use Case to the application.
+    *
+    * @return this builder
+    */
     public AppBuilder addProfileUseCase() {
         ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(profileViewModel, viewManagerModel);
         ProfileInputBoundary profileInteractor =
@@ -136,16 +152,25 @@ public class AppBuilder {
         return this;
     }
 
+
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
-     * @return the application
+     *
+     * @return the application JFrame
      */
     public JFrame buildApp() {
-        final JFrame application = new JFrame("Login Example");
+        final JFrame application = new JFrame("Music Recommendation App");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
 
+        // Add a listener to switch views based on the ViewManagerModel's state
+        viewManagerModel.addPropertyChangeListener(evt -> {
+            String viewName = viewManagerModel.getState();
+            cardLayout.show(cardPanel, viewName);
+        });
+
+        // Set the initial view to Signup
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChanged();
 

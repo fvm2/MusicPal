@@ -1,28 +1,18 @@
 package use_case.signup;
 
+/**
+ * Signup output data class.
+ */
 public class SignupOutputData {
 
-    private final String username;
-    private String creationTime;
+    private final String name;
 
-    private final boolean useCaseFailed;
-
-    public SignupOutputData(String username, String creationTime, boolean useCaseFailed) {
-        this.username = username;
-        this.creationTime = creationTime;
-        this.useCaseFailed = useCaseFailed;
+    public SignupOutputData(String name) {
+        this.name = name;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(String creationTime) {
-        this.creationTime = creationTime;
+    public String getName() {
+        return name;
     }
 
 }

@@ -3,9 +3,10 @@ package service;
 import entity.User;
 import infrastructure.database.UserRepository;
 import dto.UserDTO;
-
 import java.util.ArrayList;
 import java.util.List;
+import service.OpenAIService;
+import service.Result;
 import java.util.Optional;
 
 /**

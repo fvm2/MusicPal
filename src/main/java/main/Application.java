@@ -19,29 +19,12 @@ public class Application {
         // Initialize the OpenAIService
         OpenAIService openAIService = new OpenAIService(apiKey);
         openAIService.initialize();
-
-        AppBuilder appBuilder = getAppBuilder(openAIService);
-        appBuilder.addSignupView()
-                .addLoginView()
-                .addProfileView()
-                .addSignupUseCase()
-                .addLoginUseCase()
-                .addProfileUseCase();
-
-        JFrame app = appBuilder.buildApp();
-        app.setSize(800, 600);
-        app.setVisible(true);
-
-        // Add shutdown hook for cleanup
-        Runtime.getRuntime().addShutdownHook(new Thread(openAIService::cleanup));
-    }
-
-    @NotNull
-    private static AppBuilder getAppBuilder(OpenAIService openAIService) {
+        
+        // Instantiate repositories
         UserRepository userRepository = new UserRepository();
         PreferenceRepository preferenceRepository = new PreferenceRepository();
         RecommendationRepository recommendationRepository = new RecommendationRepository();
-
+      
         // Instantiate services
         UserService userService = new UserService(userRepository, openAIService);
         PreferenceService preferenceService = new PreferenceService(preferenceRepository);
@@ -50,9 +33,29 @@ public class Application {
                 preferenceRepository,
                 userRepository,
                 openAIService
-        );
+        );  
+        
+        // Build the application using AppBuilder
+        AppBuilder appBuilder = getAppBuilder(openAIService);
+        appBuilder.addSignupView()
+                .addLoginView()
+                .addProfileView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addProfileUseCase();
 
-        // Build the application
+        // Create and display the application window
+        JFrame app = appBuilder.buildApp();
+        app.setSize(800, 600);
+        app.setVisible(true);
+      
+        // Add shutdown hook for cleanup
+        Runtime.getRuntime().addShutdownHook(new Thread(openAIService::cleanup));
+    }
+    
+    @NotNull
+    private static AppBuilder getAppBuilder(OpenAIService openAIService, UserService userService,
+                                           PreferenceService preferenceService, RecommendationService recommendationService) {
+        // Build the application with all services
         return new AppBuilder(userService, preferenceService, recommendationService);
     }
-}

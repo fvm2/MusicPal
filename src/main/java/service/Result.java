@@ -36,7 +36,10 @@ public class Result<T> {
         return new Result<>(null, error, false);
     }
 
-    public T getData() { return data; }
-    public String getError() { return error; }
-    public boolean isSuccess() { return success; }
+    public T getData() {
+        return data; }
+    public String getError() {
+        return error; }
+    public boolean isSuccess() {
+        return success; }
 }
