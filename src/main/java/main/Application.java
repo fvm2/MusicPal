@@ -45,9 +45,15 @@ public class Application {
                 .addLoginView()
                 .addProfileView()
                 .addMenuView()
+                .addArtistRecView()
+                .addPlaylistRecView()
+                .addSongRecView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addMenuUseCase()
+                .addArtistRecUseCase()
+                .addPlaylistUseCase()
+                .addSongUseCase()
                 .addProfileUseCase();
 
         // Create and display the application window
