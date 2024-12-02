@@ -44,8 +44,10 @@ public class Application {
         appBuilder.addSignupView()
                 .addLoginView()
                 .addProfileView()
+                .addMenuView()
                 .addSignupUseCase()
                 .addLoginUseCase()
+                .addMenuUseCase()
                 .addProfileUseCase();
 
         // Create and display the application window

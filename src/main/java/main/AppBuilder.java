@@ -11,6 +11,9 @@ import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.menu.MenuController;
+import interface_adapter.menu.MenuPresenter;
+import interface_adapter.menu.MenuViewModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfilePresenter;
 import interface_adapter.profile.ProfileViewModel;
@@ -26,6 +29,9 @@ import service.UserService;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.menu.MenuInputBoundary;
+import use_case.menu.MenuInteractor;
+import use_case.menu.MenuOutputBoundary;
 import use_case.profile.ProfileInputBoundary;
 import use_case.profile.ProfileInteractor;
 import use_case.profile.ProfileOutputBoundary;
@@ -33,6 +39,7 @@ import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.LoginView;
+import view.MenuView;
 import view.ProfileView;
 import view.SignupView;
 
@@ -56,6 +63,8 @@ public class AppBuilder {
     private LoginView loginView;
     private ProfileViewModel profileViewModel;
     private ProfileView profileView;
+    private MenuView menuView;
+    private MenuViewModel menuViewModel;
 
     private final UserService userService;
     private final RecommendationService recommendationService;
@@ -108,13 +117,20 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addMenuView() {
+        menuViewModel = new MenuViewModel();
+        menuView = new MenuView(menuViewModel);
+        cardPanel.add(menuView, menuView.getViewName());
+        return this;
+    }
+
     /**
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
+                signupViewModel, loginViewModel, menuViewModel);
         final SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userService, signupOutputBoundary);
 
@@ -149,6 +165,15 @@ public class AppBuilder {
 
         ProfileController profileController = new ProfileController(profileInteractor, profileViewModel);
         profileView.setProfileController(profileController);
+        return this;
+    }
+
+    public AppBuilder addMenuUseCase() {
+        MenuOutputBoundary menuPresenter = new MenuPresenter(menuViewModel, viewManagerModel);
+        MenuInputBoundary menuInteractor = new MenuInteractor(menuPresenter);
+
+        MenuController menuController = new MenuController(menuInteractor);
+        menuView.setController(menuController);
         return this;
     }
 
