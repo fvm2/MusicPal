@@ -1,5 +1,6 @@
 package infrastructure.database;
 
+import infrastructure.database.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import entity.User;
 
-public class UserRepository implements IRepository<User> {
+public class UserRepository implements infrastructure.database.IRepository<User>{
     private static final String TABLE_NAME = "users";
 
     private List<Integer> stringToIntList(String friendsStr) {
@@ -40,7 +41,7 @@ public class UserRepository implements IRepository<User> {
     @Override
     public Optional<User> findById(int id) {
         final String sql = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = infrastructure.database.DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
@@ -67,7 +68,7 @@ public class UserRepository implements IRepository<User> {
 
     public Optional<User> findByEmail(String email) {
         final String sql = "SELECT * FROM " + TABLE_NAME + " WHERE email = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = infrastructure.database.DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, email);
@@ -98,7 +99,7 @@ public class UserRepository implements IRepository<User> {
                 " (name, surname, email, country, password, thread, friends) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = infrastructure.database.DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, user.getName());

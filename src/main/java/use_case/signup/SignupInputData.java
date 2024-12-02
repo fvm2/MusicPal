@@ -1,38 +1,42 @@
 package use_case.signup;
 
+/**
+ * Signup Input Data.
+ */
 public class SignupInputData {
 
-    final private String username;
-    final private String password;
-    final private String repeatPassword;
-    final private String country;
-    final private String surname;
+    private final String name;
+    private final String surname;
+    private final String email;
+    private final String country;
+    private final String password;
 
-    public SignupInputData(String username, String password, String repeatPassword, String country, String surname) {
-        this.username = username;
-        this.password = password;
-        this.repeatPassword = repeatPassword;
-        this.country = country;
+    public SignupInputData(String username, String surname, String email, String country, String password) {
+        this.name = username;
         this.surname = surname;
+        this.email = email;
+        this.country = country;
+        this.password = password;
     }
 
-    String getUsername() {
-        return username;
+    String getName() {
+        return name;
     }
-
-    String getPassword() {
-        return password;
-    }
-
-    String getCountry() { return country;}
 
     String getSurname() {
         return surname;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
-    public String getRepeatPassword() {
-        return repeatPassword;
+    String getCountry() {
+        return country;
+    }
+
+    String getPassword() {
+        return password;
     }
 
 }

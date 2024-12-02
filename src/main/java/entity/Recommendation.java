@@ -14,7 +14,7 @@ public class Recommendation {
     // null = not rated, true = liked, false = disliked
     private Boolean liked;
 
-    public Recommendation() {}
+    public Recommendation() { }
 
     public Recommendation(int userId, String content, String type, int by) {
         this.userId = userId;
