@@ -2,7 +2,11 @@ package use_case.menu;
 
 public interface MenuInputBoundary {
 
-    void switchToArtistRecView();
+    void openPlayListRec(MenuInputData menuInputData);
+    void openArtistRec(MenuInputData menuInputData);
+    void openSongRec(MenuInputData menuInputData);
+    void openProfile(MenuInputData menuInputData);
 
-    void switchToPlaylistRecView();
+    void logout();
+
 }
