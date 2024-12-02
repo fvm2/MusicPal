@@ -1,17 +1,20 @@
 package use_case.login;
 
+/**
+ * Implementation of the LoginInputData class.
+ */
 public class LoginInputData {
 
-    final private String username;
-    final private String password;
+    private final String email;
+    private final String password;
 
-    public LoginInputData(String username, String password) {
-        this.username = username;
+    public LoginInputData(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
-    String getUsername() {
-        return username;
+    String getEmail() {
+        return email;
     }
 
     String getPassword() {

@@ -3,7 +3,8 @@ package service;
 import entity.User;
 import infrastructure.database.UserRepository;
 import dto.UserDTO;
-import infrastructure.OpenAIService;
+import service.OpenAIService;
+import service.Result;
 import java.util.Optional;
 
 /**
@@ -35,7 +36,7 @@ public class UserService {
     public Result<User> register(UserDTO userDTO) {
         try {
             if (userRepository.findByEmail(userDTO.email()).isPresent()) {
-                return Result.failure("Email already exists");
+                return service.Result.failure("Email already exists");
             }
 
             User user = new User(

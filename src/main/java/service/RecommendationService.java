@@ -3,7 +3,7 @@ package service;
 import entity.Preference;
 import entity.Recommendation;
 import entity.User;
-import infrastructure.OpenAIService;
+import service.OpenAIService;
 import infrastructure.database.PreferenceRepository;
 import infrastructure.database.RecommendationRepository;
 import infrastructure.database.UserRepository;
