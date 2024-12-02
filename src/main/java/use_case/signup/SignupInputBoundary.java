@@ -15,4 +15,6 @@ public interface SignupInputBoundary {
      * Switch to login view class.
      */
     void switchToLoginView();
+
+    void switchMenuView();
 }
