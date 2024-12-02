@@ -11,6 +11,14 @@ import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.profile.ProfileController;
+import interface_adapter.profile.ProfilePresenter;
+import interface_adapter.profile.ProfileViewModel;
+import interface_adapter.signup.SignupController;
+import interface_adapter.signup.SignupPresenter;
+import interface_adapter.signup.SignupViewModel;
+import service.PreferenceService;
+import service.RecommendationService;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -18,10 +26,14 @@ import service.UserService;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.profile.ProfileInputBoundary;
+import use_case.profile.ProfileInteractor;
+import use_case.profile.ProfileOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.LoginView;
+import view.ProfileView;
 import view.SignupView;
 
 /**
@@ -36,16 +48,30 @@ public class AppBuilder {
     private final CardLayout cardLayout = new CardLayout();
 
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+  
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
-    private LoginView loginView;
     private LoggedInViewModel loggedInViewModel;
+    private LoginView loginView;
+    private ProfileViewModel profileViewModel;
+    private ProfileView profileView;
 
     private final UserService userService;
-
-    public AppBuilder(UserService userService) {
+    private final RecommendationService recommendationService;
+    private final PreferenceService preferenceService;
+  
+    /**
+    * Constructs an AppBuilder with the necessary services.
+    *
+    * @param userService            the UserService instance
+    * @param preferenceService      the PreferenceService instance
+    * @param recommendationService  the RecommendationService instance
+    */
+    public AppBuilder(UserService userService, PreferenceService preferenceService, RecommendationService recommendationService) {
         this.userService = userService;
+        this.recommendationService = recommendationService;
+        this.preferenceService = preferenceService;
         cardPanel.setLayout(cardLayout);
     }
 
@@ -68,6 +94,17 @@ public class AppBuilder {
         loginViewModel = new LoginViewModel();
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Profile View to the application.
+     * @return this builder
+     */
+    public AppBuilder addProfileView() {
+        profileViewModel = new ProfileViewModel();
+        profileView = new ProfileView(profileViewModel);
+        cardPanel.add(profileView, profileView.getViewName());
         return this;
     }
 
@@ -99,17 +136,41 @@ public class AppBuilder {
         loginView.setLoginController(loginController);
         return this;
     }
+  
+    /**
+    * Adds the Profile Use Case to the application.
+    *
+    * @return this builder
+    */
+    public AppBuilder addProfileUseCase() {
+        ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(profileViewModel, viewManagerModel);
+        ProfileInputBoundary profileInteractor =
+                new ProfileInteractor(profileOutputBoundary, userService, preferenceService);
+
+        ProfileController profileController = new ProfileController(profileInteractor, profileViewModel);
+        profileView.setProfileController(profileController);
+        return this;
+    }
+
 
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
-     * @return the application
+     *
+     * @return the application JFrame
      */
     public JFrame buildApp() {
-        final JFrame application = new JFrame("Login Example");
+        final JFrame application = new JFrame("Music Recommendation App");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
 
+        // Add a listener to switch views based on the ViewManagerModel's state
+        viewManagerModel.addPropertyChangeListener(evt -> {
+            String viewName = viewManagerModel.getState();
+            cardLayout.show(cardPanel, viewName);
+        });
+
+        // Set the initial view to Signup
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChanged();
 

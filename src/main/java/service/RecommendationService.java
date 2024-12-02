@@ -12,23 +12,23 @@ import java.util.List;
 /**
  * RecommendationService
  * Core service for generating and managing music recommendations.
- *
+ * <p>
  * Key responsibilities:
  * - Generating AI-based recommendations
  * - Managing friend recommendations
  * - Handling recommendation ratings
  * - Building AI prompts based on user preferences
- *
+ * <p>
  * Dependencies:
  * - RecommendationRepository
  * - PreferenceRepository
  * - UserRepository
  * - OpenAIService
- *
+ * <p>
  * Key methods:
  * - getRecommendation: Generates new recommendation based on user preferences
  * - rateRecommendation: Updates user's rating for a recommendation
- *
+ * <p>
  * Usage example:
  * RecommendationService recService = new RecommendationService(recRepo, prefRepo, userRepo, openAIService);
  * Result<Recommendation> result = recService.getRecommendation(userId, "Song");
