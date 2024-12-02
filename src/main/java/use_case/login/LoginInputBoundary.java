@@ -4,5 +4,4 @@ public interface LoginInputBoundary {
 
     void execute(LoginInputData loginInputData);
 
-    void createAccount();
 }
