@@ -8,10 +8,4 @@ public interface MenuInputBoundary {
 
     void switchToSongRecView();
 
-    void openPlayListRec(MenuInputData menuInputData);
-    void openArtistRec(MenuInputData menuInputData);
-    void openSongRec(MenuInputData menuInputData);
-    void openProfile(MenuInputData menuInputData);
-
-    void logout();
 }

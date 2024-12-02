@@ -4,6 +4,7 @@ import java.util.List;
 
 public class RecommendPlaylistInputData {
     private List<String> songs;
+
     public RecommendPlaylistInputData(List<String> songs) {
         this.songs = songs;
     }
@@ -11,3 +12,4 @@ public class RecommendPlaylistInputData {
     public List<String> getSongs() {
         return songs;
     }
+}
