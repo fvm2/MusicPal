@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -39,10 +40,12 @@ public class AppBuilder {
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private LoginView loginView;
+    private LoggedInViewModel loggedInViewModel;
 
     private final UserService userService;
 
-    public AppBuilder() {
+    public AppBuilder(UserService userService) {
+        this.userService = userService;
         cardPanel.setLayout(cardLayout);
     }
 
@@ -88,7 +91,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoginUseCase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loginViewModel);
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(loggedInViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userService, loginOutputBoundary);
 

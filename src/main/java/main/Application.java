@@ -1,8 +1,12 @@
 package main;
 
-import presentation.MusicRecommendationGUI;
+import infrastructure.database.UserRepository;
 import service.OpenAIService;
 import service.RecommendationService;
+import main.AppBuilder;
+import service.UserService;
+
+import javax.swing.*;
 
 public class Application {
     public static void main(String[] args) {
@@ -13,11 +17,19 @@ public class Application {
         OpenAIService openAIService = new OpenAIService(apiKey);
         ((OpenAIService) openAIService).initialize();
 
-        RecommendationService recommendationService = new RecommendationService(openAIService);
-
+        // RecommendationService recommendationService = new RecommendationService(openAIService);
+        UserRepository userRepository = new UserRepository();
+        UserService userService = new UserService(userRepository, openAIService);
         // Start GUI
-        MusicRecommendationGUI gui = new MusicRecommendationGUI(recommendationService);
-        gui.start();
+        final AppBuilder appBuilder = new AppBuilder(userService);
+        final JFrame application = appBuilder
+                .addLoginView()
+                .addSignupView()
+                .addLoginUseCase()
+                .addSignupUseCase().buildApp();
+
+        application.pack();
+        application.setVisible(true);
 
         // Add shutdown hook for cleanup
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

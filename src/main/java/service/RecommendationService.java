@@ -59,7 +59,7 @@ public class RecommendationService {
                     .orElseThrow(() -> new RuntimeException("No preferences found"));
 
             String prompt = buildPrompt(pref, type);
-            String aiResponse = openAIService.getRecommendationsFromAI(prompt);
+            String aiResponse = openAIService.getRecommendationsFromAI(prompt, user.getThread());
 
             Recommendation recommendation = parseAIResponse(aiResponse, userId, type);
             recommendationRepository.save(recommendation);
