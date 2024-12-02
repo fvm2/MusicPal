@@ -35,4 +35,5 @@ public class MenuPresenter implements MenuOutputBoundary {
         viewManagerModel.setState(songRecViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
+
 }

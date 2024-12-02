@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.assistant.*;
-import main.ApiKey;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public abstract class Recommender {
     private final SimpleOpenAI openAI;
@@ -17,8 +17,9 @@ public abstract class Recommender {
     private final ObjectMapper objectMapper;
 
     public Recommender() {
-        final ApiKey apiKeyObject = new ApiKey();
-        final String apiKey = apiKeyObject.getApi_key();
+        final Dotenv dotenv = Dotenv.load();
+
+        final String apiKey = dotenv.get("OPENAI_API_KEY");
         this.openAI = SimpleOpenAI.builder()
                 .apiKey(apiKey)
                 .build();
