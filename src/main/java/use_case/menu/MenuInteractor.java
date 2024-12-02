@@ -1,11 +1,24 @@
 package use_case.menu;
 
-public class MenuInteractor implements MenuInputBoundary{
+public class MenuInteractor implements MenuInputBoundary {
 
-    final MenuOutputBoundary menuPresenter;
+    private final MenuOutputBoundary menuPresenter;
     public MenuInteractor(MenuOutputBoundary menuOutputBoundary){
         this.menuPresenter = menuOutputBoundary;
     }
+
+    @Override
+    public void switchToArtistRecView() {
+        menuPresenter.switchToArtistRecView();
+    }
+
+    @Override
+    public void switchToPlaylistRecView() {
+        menuPresenter.switchToPlaylistRecView();
+    }
+
+    @Override
+    public void switchToSongRecView() { menuPresenter.switchToSongRecView(); }
 
     @Override
     public void openProfile(MenuInputData menuInputData){
@@ -35,3 +48,4 @@ public class MenuInteractor implements MenuInputBoundary{
     public void logout(){menuPresenter.logout();}
 
 }
+
