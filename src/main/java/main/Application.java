@@ -1,27 +1,58 @@
 package main;
 
-import presentation.MusicRecommendationGUI;
+import infrastructure.database.PreferenceRepository;
+import infrastructure.database.RecommendationRepository;
+import infrastructure.database.UserRepository;
+import org.jetbrains.annotations.NotNull;
+import service.OpenAIService;
+import service.PreferenceService;
+import service.RecommendationService;
+import service.UserService;
+
+import javax.swing.*;
 
 public class Application {
     public static void main(String[] args) {
-        String apiKey = "sk-proj-AxsKDGcfbndAYhlTpJEVHAvJQ_QlltHl5h_kL_iqsAyW7_ZHZZKjIBFcOsHD-JZ0VkB4Ay0fkQT3BlbkF" +
-                "JnrWpzxioacC5bc_ks49T7l2Vr-0tEhJoKa97vmzc-Vy3bTJI4F0FDb9M3uttBlwOY3I3hrEXMA";
+        // Initialize the API key for OpenAIService
+        String apiKey = "YOUR_API_KEY";
 
-        // Setup dependencies
-        IOpenAIService openAIService = new OpenAIService(apiKey);
-        ((OpenAIService) openAIService).initialize();
+        // Initialize the OpenAIService
+        OpenAIService openAIService = new OpenAIService(apiKey);
+        openAIService.initialize();
 
-        RecommendationService recommendationService = new RecommendationService(openAIService);
+        AppBuilder appBuilder = getAppBuilder(openAIService);
+        appBuilder.addSignupView()
+                .addLoginView()
+                .addProfileView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addProfileUseCase();
 
-        // Start GUI
-        MusicRecommendationGUI gui = new MusicRecommendationGUI(recommendationService);
-        gui.start();
+        JFrame app = appBuilder.buildApp();
+        app.setSize(800, 600);
+        app.setVisible(true);
 
         // Add shutdown hook for cleanup
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (openAIService instanceof OpenAIService) {
-                ((OpenAIService) openAIService).cleanup();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(openAIService::cleanup));
+    }
+
+    @NotNull
+    private static AppBuilder getAppBuilder(OpenAIService openAIService) {
+        UserRepository userRepository = new UserRepository();
+        PreferenceRepository preferenceRepository = new PreferenceRepository();
+        RecommendationRepository recommendationRepository = new RecommendationRepository();
+
+        // Instantiate services
+        UserService userService = new UserService(userRepository, openAIService);
+        PreferenceService preferenceService = new PreferenceService(preferenceRepository);
+        RecommendationService recommendationService = new RecommendationService(
+                recommendationRepository,
+                preferenceRepository,
+                userRepository,
+                openAIService
+        );
+
+        // Build the application
+        return new AppBuilder(userService, preferenceService, recommendationService);
     }
 }

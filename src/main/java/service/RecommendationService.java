@@ -3,7 +3,7 @@ package service;
 import entity.Preference;
 import entity.Recommendation;
 import entity.User;
-import infrastructure.OpenAIService;
+import service.OpenAIService;
 import infrastructure.database.PreferenceRepository;
 import infrastructure.database.RecommendationRepository;
 import infrastructure.database.UserRepository;
@@ -59,7 +59,7 @@ public class RecommendationService {
                     .orElseThrow(() -> new RuntimeException("No preferences found"));
 
             String prompt = buildPrompt(pref, type);
-            String aiResponse = openAIService.getRecommendationsFromAI(prompt);
+            String aiResponse = openAIService.getRecommendationsFromAI(prompt, user.getThread());
 
             Recommendation recommendation = parseAIResponse(aiResponse, userId, type);
             recommendationRepository.save(recommendation);

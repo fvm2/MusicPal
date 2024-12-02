@@ -3,24 +3,26 @@ package service;
 import entity.User;
 import infrastructure.database.UserRepository;
 import dto.UserDTO;
-import infrastructure.OpenAIService;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * UserService
  * Handles user-related business operations including registration, authentication, and friend management.
- *
+ * <p>
  * Key responsibilities:
  * - User registration with OpenAI thread creation
  * - User authentication
  * - Friend request management
- *
+ * <p>
  * Dependencies:
  * - UserRepository for data persistence
  * - OpenAIService for AI thread management
- *
+ * <p>
  * Usage example:
- * UserService userService = new UserService(userRepository, openAIService);
+ * UserService = new UserService(userRepository, openAIService);
  * Result<User> result = userService.register(new UserDTO("John", "Doe", "john@email.com", "USA", "password"));
  */
 public class UserService {
@@ -35,7 +37,7 @@ public class UserService {
     public Result<User> register(UserDTO userDTO) {
         try {
             if (userRepository.findByEmail(userDTO.email()).isPresent()) {
-                return Result.failure("Email already exists");
+                return service.Result.failure("Email already exists");
             }
 
             User user = new User(
@@ -84,5 +86,23 @@ public class UserService {
         } catch (Exception e) {
             return Result.failure("Failed to send friend request: " + e.getMessage());
         }
+    }
+
+    public Result<User> getUserByEmail(String email) {
+        try {
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            return userOptional.map(Result::success).orElseGet(() -> Result.failure("User not found"));
+        } catch (Exception e) {
+            return Result.failure("Failed to retrieve user: " + e.getMessage());
+        }
+    }
+
+    public List<String> getUserEmailsByIds(List<Integer> userIds) {
+        List<String> emails = new ArrayList<>();
+        for (Integer id : userIds) {
+            Optional<User> userOptional = userRepository.findById(id);
+            userOptional.ifPresent(user -> emails.add(user.getEmail()));
+        }
+        return emails;
     }
 }
