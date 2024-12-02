@@ -24,6 +24,7 @@ public class OpenAIService {
 
     private void createAssistant() {
         try {
+            System.out.println("Creating Assistant");
             var assistant = openAI.assistants()
                     .create(AssistantRequest.builder()
                             .name("Music Recommendation Engine")
@@ -62,6 +63,7 @@ public class OpenAIService {
                     .join();
 
             this.assistantId = assistant.getId();
+            System.out.println("Successfully created assistant " + assistantId);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create assistant: " + e.getMessage());
         }
