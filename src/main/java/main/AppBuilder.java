@@ -86,6 +86,10 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Profile View to the application.
+     * @return this builder
+     */
     public AppBuilder addProfileView() {
         profileViewModel = new ProfileViewModel();
         profileView = new ProfileView(profileViewModel);

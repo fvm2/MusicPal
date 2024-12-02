@@ -70,24 +70,6 @@ public class UserService {
         }
     }
 
-    public Result<Void> sendFriendRequest(int fromId, int toId) {
-        try {
-            Optional<User> toUser = userRepository.findById(toId);
-            if (toUser.isEmpty()) {
-                return Result.failure("User not found");
-            }
-
-            User user = toUser.get();
-            if (!user.getFriends().contains(fromId)) {
-                user.getFriends().add(fromId);
-                userRepository.update(user);
-            }
-            return Result.success(null);
-        } catch (Exception e) {
-            return Result.failure("Failed to send friend request: " + e.getMessage());
-        }
-    }
-
     public Result<User> getUserByEmail(String email) {
         try {
             Optional<User> userOptional = userRepository.findByEmail(email);
