@@ -45,7 +45,14 @@ MusicPal addresses these challenges by:
 - Personal profile creation with basic user information
 - Password-protected accounts to ensure privacy
 
-#### ss of login signup.
+#### sign up before
+![before_signup.jpg](images%20for%20readme%2Fbefore_signup.jpg)
+#### sign up after
+![after_signup.jpg](images%20for%20readme%2Fafter_signup.jpg)
+#### login before
+![before_login.jpg](images%20for%20readme%2Fbefore_login.jpg)
+#### login after
+![after_login_and_menu.jpg](images%20for%20readme%2Fafter_login_and_menu.jpg)
 
 ### Music Preference Customization
 
@@ -59,7 +66,10 @@ MusicPal addresses these challenges by:
 - Ability to specify multiple preferences in each category
 - Easy-to-use text-based input interface
 
-#### ss of the preferences.
+#### preferences before
+![preferences_before.jpg](images%20for%20readme%2Fpreferences_before.jpg)
+#### preferences after
+![preferences_after.jpg](images%20for%20readme%2Fpreferences_after.jpg)
 
 ### AI-Powered Recommendations
 
@@ -67,7 +77,8 @@ MusicPal addresses these challenges by:
 - Recommendation types focused on songs
 - Like/Dislike options for each recommendation
 
-#### ss of recommendation.
+#### getting recommendation
+![after_get_rec.jpg](images%20for%20readme%2Fafter_get_rec.jpg)
 
 ### Recommendation History
 
@@ -75,8 +86,8 @@ MusicPal addresses these challenges by:
 - Track liked and disliked suggestions
 - Monitor recommendation evolution over time
 
-#### ss of history.
-
+#### user liked the rec and is now viewing history
+![view_history_after.jpg](images%20for%20readme%2Fview_history_after.jpg)
 ### User Experience
 
 - Simple, intuitive graphical interface
