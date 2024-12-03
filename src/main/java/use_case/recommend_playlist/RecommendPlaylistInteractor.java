@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import data_access.DataAccessInterface;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.cdimascio.dotenv.Dotenv;
+import service.RecommendationService;
+import service.PreferenceService;
+import entity.User;
 import use_case.recommender.Recommender;
 
 import java.util.List;
@@ -14,8 +17,13 @@ public class RecommendPlaylistInteractor extends Recommender implements Recommen
     private final ObjectMapper objectMapper;
     private DataAccessInterface dataAccessObject;
     private final RecommendPlaylistOutputBoundary recommendPlaylistPresenter;
+    private final RecommendationService recommendationService;
+    private final PreferenceService preferenceService;
 
-    public RecommendPlaylistInteractor(DataAccessInterface dataAccessObject, RecommendPlaylistOutputBoundary recommendPlaylistPresenter) {
+    public RecommendPlaylistInteractor(DataAccessInterface dataAccessObject,
+                                       RecommendPlaylistOutputBoundary recommendPlaylistPresenter,
+                                       RecommendationService recommendationService,
+                                       PreferenceService preferenceService) {
         final Dotenv dotenv = Dotenv.load();
 
         final String apiKey = dotenv.get("OPENAI_API_KEY");
@@ -25,6 +33,8 @@ public class RecommendPlaylistInteractor extends Recommender implements Recommen
         this.objectMapper = new ObjectMapper();
         this.dataAccessObject = dataAccessObject;
         this.recommendPlaylistPresenter = recommendPlaylistPresenter;
+        this.recommendationService = recommendationService;
+        this.preferenceService = preferenceService;
         this.createAssistant();
     }
 

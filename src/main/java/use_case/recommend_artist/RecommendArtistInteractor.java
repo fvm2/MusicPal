@@ -6,6 +6,9 @@ import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.cdimascio.dotenv.Dotenv;
 import use_case.recommender.Recommender;
 
+import service.RecommendationService;
+import service.Result;
+
 public class RecommendArtistInteractor extends Recommender implements RecommendArtistInputBoundary {
     private final SimpleOpenAI openAI;
     private String assistantId;
