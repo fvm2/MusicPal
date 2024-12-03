@@ -37,7 +37,14 @@ public class MenuView extends JPanel implements ActionListener, PropertyChangeLi
         artistRec = new JButton(MenuViewModel.ARTIST_REC_LABEL);
         buttons.add(artistRec);
 
-        profile.addActionListener(this);
+        profile.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        menuController.switchToProfileView();
+                    }
+                }
+        );
         songRec.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
