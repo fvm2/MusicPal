@@ -136,7 +136,13 @@ public class AppBuilder {
      */
     public AppBuilder addProfileView() {
         profileViewModel = new ProfileViewModel();
+        ProfileOutputBoundary profilePresenter = new ProfilePresenter(profileViewModel, viewManagerModel);
+        ProfileInputBoundary profileInteractor = new ProfileInteractor(userService, profilePresenter);
+        ProfileController profileController = new ProfileController(profileInteractor);
         profileView = new ProfileView(profileViewModel);
+        profileView.setProfileController(profileController);
+
+        // Add view to card panel
         cardPanel.add(profileView, profileView.getViewName());
         return this;
     }
@@ -175,7 +181,7 @@ public class AppBuilder {
      */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel, menuViewModel);
+                signupViewModel, loginViewModel, menuViewModel, profileViewModel);
         final SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userService, signupOutputBoundary);
 
@@ -224,18 +230,15 @@ public class AppBuilder {
         songRecView.setController(controller);
         return this;
     }
-  
-    /**
-    * Adds the Profile Use Case to the application.
-    *
-    * @return this builder
-    */
-    public AppBuilder addProfileUseCase() {
-        ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(profileViewModel, viewManagerModel);
-        ProfileInputBoundary profileInteractor =
-                new ProfileInteractor(profileOutputBoundary, userService, preferenceService);
 
-        ProfileController profileController = new ProfileController(profileInteractor, profileViewModel);
+    /**
+     * Adds the Profile Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addProfileUseCase() {
+        final ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(profileViewModel, viewManagerModel);
+        final ProfileInputBoundary profileInteractor = new ProfileInteractor(userService, profileOutputBoundary);
+        final ProfileController profileController = new ProfileController(profileInteractor);
         profileView.setProfileController(profileController);
         return this;
     }
