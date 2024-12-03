@@ -1,4 +1,4 @@
 package data_access;
 
-public class DataAccessInterface {
+public interface DataAccessInterface {
 }

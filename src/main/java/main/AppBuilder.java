@@ -6,17 +6,31 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.DBDataAccessObject;
+import data_access.DataAccessInterface;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.artist_recommendation.ArtistController;
+import interface_adapter.artist_recommendation.ArtistPresenter;
+import interface_adapter.artist_recommendation.ArtistRecViewModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.menu.MenuController;
+import interface_adapter.menu.MenuPresenter;
+import interface_adapter.menu.MenuViewModel;
+import interface_adapter.playlist.PlaylistController;
+import interface_adapter.playlist.PlaylistPresenter;
+import interface_adapter.playlist.PlaylistRecViewModel;
 import interface_adapter.profile.ProfileController;
 import interface_adapter.profile.ProfilePresenter;
 import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.song_recommendation.SongRecController;
+import interface_adapter.song_recommendation.SongRecPresenter;
+import interface_adapter.song_recommendation.SongRecViewModel;
 import service.PreferenceService;
 import service.RecommendationService;
 import interface_adapter.signup.SignupController;
@@ -26,15 +40,25 @@ import service.UserService;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.menu.MenuInputBoundary;
+import use_case.menu.MenuInteractor;
+import use_case.menu.MenuOutputBoundary;
 import use_case.profile.ProfileInputBoundary;
 import use_case.profile.ProfileInteractor;
 import use_case.profile.ProfileOutputBoundary;
+import use_case.recommend_artist.RecommendArtistInputBoundary;
+import use_case.recommend_artist.RecommendArtistInteractor;
+import use_case.recommend_artist.RecommendArtistOutputBoundary;
+import use_case.recommend_playlist.RecommendPlaylistInputBoundary;
+import use_case.recommend_playlist.RecommendPlaylistInteractor;
+import use_case.recommend_playlist.RecommendPlaylistOutputBoundary;
+import use_case.recommend_song.RecommendSongInputBoundary;
+import use_case.recommend_song.RecommendSongInteractor;
+import use_case.recommend_song.RecommendSongOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
-import view.LoginView;
-import view.ProfileView;
-import view.SignupView;
+import view.*;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -48,6 +72,7 @@ public class AppBuilder {
     private final CardLayout cardLayout = new CardLayout();
 
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private final DataAccessInterface dbDataAccessObject = new DBDataAccessObject();
   
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -56,6 +81,14 @@ public class AppBuilder {
     private LoginView loginView;
     private ProfileViewModel profileViewModel;
     private ProfileView profileView;
+    private MenuView menuView;
+    private MenuViewModel menuViewModel;
+    private ArtistRecView artistRecView;
+    private ArtistRecViewModel artistRecViewModel;
+    private PlaylistRecView playlistRecView;
+    private PlaylistRecViewModel playlistRecViewModel;
+    private SongRecView songRecView;
+    private SongRecViewModel songRecViewModel;
 
     private final UserService userService;
     private final RecommendationService recommendationService;
@@ -108,13 +141,41 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addMenuView() {
+        menuViewModel = new MenuViewModel();
+        menuView = new MenuView(menuViewModel);
+        cardPanel.add(menuView, menuView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addArtistRecView() {
+        artistRecViewModel = new ArtistRecViewModel();
+        artistRecView = new ArtistRecView(artistRecViewModel);
+        cardPanel.add(artistRecView, artistRecView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addPlaylistRecView() {
+        playlistRecViewModel = new PlaylistRecViewModel();
+        playlistRecView = new PlaylistRecView(playlistRecViewModel);
+        cardPanel.add(playlistRecView, playlistRecView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addSongRecView() {
+        songRecViewModel = new SongRecViewModel();
+        songRecView = new SongRecView(songRecViewModel);
+        cardPanel.add(songRecView, songRecView.getViewName());
+        return this;
+    }
+
     /**
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
+                signupViewModel, loginViewModel, menuViewModel);
         final SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userService, signupOutputBoundary);
 
@@ -136,6 +197,33 @@ public class AppBuilder {
         loginView.setLoginController(loginController);
         return this;
     }
+
+    public AppBuilder addArtistRecUseCase() {
+        final RecommendArtistOutputBoundary recommendArtistOutputBoundary = new ArtistPresenter(artistRecViewModel, viewManagerModel, menuViewModel);
+        final RecommendArtistInputBoundary recommendArtistInteractor = new RecommendArtistInteractor(dbDataAccessObject, recommendArtistOutputBoundary);
+
+        final ArtistController controller = new ArtistController(recommendArtistInteractor);
+        artistRecView.setController(controller);
+        return this;
+    }
+
+    public AppBuilder addPlaylistUseCase() {
+        final RecommendPlaylistOutputBoundary recommendPlaylistOutputBoundary = new PlaylistPresenter(playlistRecViewModel, viewManagerModel, menuViewModel);
+        final RecommendPlaylistInputBoundary recommendPlaylistInteractor = new RecommendPlaylistInteractor(dbDataAccessObject, recommendPlaylistOutputBoundary);
+
+        final PlaylistController controller = new PlaylistController(recommendPlaylistInteractor);
+        playlistRecView.setController(controller);
+        return this;
+    }
+
+    public AppBuilder addSongUseCase() {
+        final RecommendSongOutputBoundary recommendSongOutputBoundary = new SongRecPresenter(songRecViewModel, viewManagerModel, menuViewModel);
+        final RecommendSongInputBoundary recommendSongInteractor = new RecommendSongInteractor(dbDataAccessObject, recommendSongOutputBoundary);
+
+        final SongRecController controller = new SongRecController(recommendSongInteractor);
+        songRecView.setController(controller);
+        return this;
+    }
   
     /**
     * Adds the Profile Use Case to the application.
@@ -149,6 +237,15 @@ public class AppBuilder {
 
         ProfileController profileController = new ProfileController(profileInteractor, profileViewModel);
         profileView.setProfileController(profileController);
+        return this;
+    }
+
+    public AppBuilder addMenuUseCase() {
+        MenuOutputBoundary menuPresenter = new MenuPresenter(menuViewModel, viewManagerModel);
+        MenuInputBoundary menuInteractor = new MenuInteractor(menuPresenter);
+
+        MenuController menuController = new MenuController(menuInteractor);
+        menuView.setController(menuController);
         return this;
     }
 

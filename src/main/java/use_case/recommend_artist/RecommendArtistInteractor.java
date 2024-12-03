@@ -3,7 +3,7 @@ package use_case.recommend_artist;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import data_access.DataAccessInterface;
 import io.github.sashirestela.openai.SimpleOpenAI;
-import main.ApiKey;
+import io.github.cdimascio.dotenv.Dotenv;
 import use_case.recommender.Recommender;
 
 public class RecommendArtistInteractor extends Recommender implements RecommendArtistInputBoundary {
@@ -14,8 +14,9 @@ public class RecommendArtistInteractor extends Recommender implements RecommendA
     private final RecommendArtistOutputBoundary recommendArtistPresenter;
 
     public RecommendArtistInteractor(DataAccessInterface dataAccessObject, RecommendArtistOutputBoundary recommendArtistPresenter) {
-        final ApiKey apiKeyObject = new ApiKey();
-        final String apiKey = apiKeyObject.getApi_key();
+        final Dotenv dotenv = Dotenv.load();
+
+        final String apiKey = dotenv.get("OPENAI_API_KEY");
         this.openAI = SimpleOpenAI.builder()
                 .apiKey(apiKey)
                 .build();

@@ -3,6 +3,7 @@ package interface_adapter.menu;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.artist_recommendation.ArtistRecViewModel;
 import interface_adapter.playlist.PlaylistRecViewModel;
+import interface_adapter.profile.ProfileViewModel;
 import interface_adapter.song_recommendation.SongRecViewModel;
 import use_case.menu.MenuOutputBoundary;
 
@@ -12,6 +13,7 @@ public class MenuPresenter implements MenuOutputBoundary {
     private final ArtistRecViewModel artistRecViewModel;
     private final PlaylistRecViewModel playlistRecViewModel;
     private final SongRecViewModel songRecViewModel;
+    private final ProfileViewModel profileViewModel;
 
     public MenuPresenter(MenuViewModel menuViewModel, ViewManagerModel viewManagerModel) {
         this.menuViewModel = menuViewModel;
@@ -19,6 +21,7 @@ public class MenuPresenter implements MenuOutputBoundary {
         this.artistRecViewModel = new ArtistRecViewModel();
         this.playlistRecViewModel = new PlaylistRecViewModel();
         this.songRecViewModel = new SongRecViewModel();
+        this.profileViewModel = new ProfileViewModel();
     }
 
     @Override
@@ -38,4 +41,11 @@ public class MenuPresenter implements MenuOutputBoundary {
         viewManagerModel.setState(songRecViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void switchToProfileView() {
+        viewManagerModel.setState(profileViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+    }
+
 }

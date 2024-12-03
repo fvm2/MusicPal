@@ -23,7 +23,7 @@ import interface_adapter.signup.SignupViewModel;
 /**
  * The view for our sign-up page.
  */
-public class SignupView extends JPanel implements ActionListener {
+public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewMame = "sign up";
 
     private final SignupViewModel signupViewModel;
@@ -35,11 +35,11 @@ public class SignupView extends JPanel implements ActionListener {
     private SignupController signupController;
 
     private final JButton signUp;
-    private final JButton cancel;
     private final JButton toLogin;
 
     public SignupView(SignupViewModel signupViewModel) {
         this.signupViewModel = signupViewModel;
+        signupViewModel.addPropertyChangeListener(this);
 
         final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -76,8 +76,6 @@ public class SignupView extends JPanel implements ActionListener {
         buttons.add(toLogin);
         signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
         buttons.add(signUp);
-        cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
-        buttons.add(cancel);
 
         signUp.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -93,6 +91,8 @@ public class SignupView extends JPanel implements ActionListener {
                                     currentState.getCountry(),
                                     currentState.getPassword()
                             );
+
+                            signupController.switchToMenuView();
                         }
                     }
                 }
@@ -101,12 +101,12 @@ public class SignupView extends JPanel implements ActionListener {
         toLogin.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
-                        signupController.switchToLoginView();
+                        if (evt.getSource().equals(toLogin)) {
+                            signupController.switchToMenuView();
+                        }
                     }
                 }
         );
-
-        cancel.addActionListener(this);
 
         // add name, surname, email, country, password listeners.
         addNameListener();
@@ -255,6 +255,8 @@ public class SignupView extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JOptionPane.showMessageDialog(this, "Some message.");
     }
+
+    public void propertyChange(PropertyChangeEvent evt) {}
 
     public String getViewName() {
         return viewMame;

@@ -3,27 +3,33 @@ package main;
 import infrastructure.database.PreferenceRepository;
 import infrastructure.database.RecommendationRepository;
 import infrastructure.database.UserRepository;
+import io.github.cdimascio.dotenv.DotenvEntry;
 import org.jetbrains.annotations.NotNull;
 import service.OpenAIService;
 import service.PreferenceService;
 import service.RecommendationService;
 import service.UserService;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import javax.swing.*;
+import java.util.Set;
 
 public class Application {
     public static void main(String[] args) {
         // Initialize the API key for OpenAIService
-        String apiKey = "YOUR_API_KEY";
+        final Dotenv dotenv = Dotenv.load();
+        final String apiKey = dotenv.get("OPENAI_API_KEY");
 
         // Initialize the OpenAIService
-        OpenAIService openAIService = new OpenAIService(apiKey);
+        final OpenAIService openAIService = new OpenAIService(apiKey);
         openAIService.initialize();
 
         // Instantiate repositories
-        UserRepository userRepository = new UserRepository();
-        PreferenceRepository preferenceRepository = new PreferenceRepository();
-        RecommendationRepository recommendationRepository = new RecommendationRepository();
+
+        final UserRepository userRepository = new UserRepository();
+        final PreferenceRepository preferenceRepository = new PreferenceRepository();
+        final RecommendationRepository recommendationRepository = new RecommendationRepository();
+
 
         // Instantiate services
         UserService userService = new UserService(userRepository, openAIService);
@@ -36,13 +42,24 @@ public class Application {
         );
 
         // Build the application using AppBuilder
-        AppBuilder appBuilder = getAppBuilder(openAIService, userService, preferenceService,
-                recommendationService);
+
+        AppBuilder appBuilder = getAppBuilder(openAIService, userService, preferenceService, recommendationService);
         appBuilder.addSignupView()
                 .addLoginView()
                 .addProfileView()
+                .addMenuView()
+                .addArtistRecView()
+                .addPlaylistRecView()
+
+                .addProfileView()
+                .addSongRecView()
                 .addSignupUseCase()
                 .addLoginUseCase()
+                .addMenuUseCase()
+                .addProfileUseCase()
+                .addArtistRecUseCase()
+                .addPlaylistUseCase()
+                .addSongUseCase()
                 .addProfileUseCase();
 
         // Create and display the application window

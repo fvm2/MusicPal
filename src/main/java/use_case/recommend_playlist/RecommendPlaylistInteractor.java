@@ -3,7 +3,7 @@ package use_case.recommend_playlist;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import data_access.DataAccessInterface;
 import io.github.sashirestela.openai.SimpleOpenAI;
-import main.ApiKey;
+import io.github.cdimascio.dotenv.Dotenv;
 import use_case.recommender.Recommender;
 
 import java.util.List;
@@ -16,8 +16,9 @@ public class RecommendPlaylistInteractor extends Recommender implements Recommen
     private final RecommendPlaylistOutputBoundary recommendPlaylistPresenter;
 
     public RecommendPlaylistInteractor(DataAccessInterface dataAccessObject, RecommendPlaylistOutputBoundary recommendPlaylistPresenter) {
-        final ApiKey apiKeyObject = new ApiKey();
-        final String apiKey = apiKeyObject.getApi_key();
+        final Dotenv dotenv = Dotenv.load();
+
+        final String apiKey = dotenv.get("OPENAI_API_KEY");
         this.openAI = SimpleOpenAI.builder()
                 .apiKey(apiKey)
                 .build();
