@@ -4,6 +4,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.menu.MenuViewModel;
+import interface_adapter.signup.SignupViewModel;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 
@@ -12,13 +13,13 @@ import use_case.signup.SignupOutputData;
  */
 public class SignupPresenter implements SignupOutputBoundary {
 
-    private final interface_adapter.signup.SignupViewModel signupViewModel;
+    private final SignupViewModel signupViewModel;
     private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
     private final MenuViewModel menuViewModel;
 
     public SignupPresenter(ViewManagerModel viewManagerModel,
-                           interface_adapter.signup.SignupViewModel signupViewModel,
+                           SignupViewModel signupViewModel,
                            LoginViewModel loginViewModel, MenuViewModel menuViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
@@ -45,6 +46,7 @@ public class SignupPresenter implements SignupOutputBoundary {
 
     @Override
     public void switchToLoginView() {
+        System.out.println("trying to implement the switchToLoginView method");
         viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }

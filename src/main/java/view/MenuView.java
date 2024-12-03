@@ -14,32 +14,32 @@ public class MenuView extends JPanel implements ActionListener, PropertyChangeLi
     private final String viewName = "menu";
 
     private final MenuViewModel menuViewModel;
-    private final JButton profile;
-    private final JButton songRec;
-    private final JButton playlistRec;
-    private final JButton artistRec;
+    private final JButton profile = new JButton("profile");
+    private final JButton songRec = new JButton("song recommendation");
+    private final JButton playlistRec  = new JButton("playlist recommendation");
+    private final JButton artistRec = new JButton("artist recommendation");
     private MenuController menuController;
 
     public MenuView(MenuViewModel menuViewModel) {
         this.menuViewModel = menuViewModel;
         menuViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel(MenuViewModel.TITLE_LABEL);
+        final JLabel title = new JLabel(viewName);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        // buttons panel
         final JPanel buttons = new JPanel();
-        profile = new JButton(MenuViewModel.PROFILE_LABEL);
         buttons.add(profile);
-        songRec = new JButton(MenuViewModel.SONG_REC_LABEL);
         buttons.add(songRec);
-        playlistRec = new JButton(MenuViewModel.PLAYLIST_REC_LABEL);
         buttons.add(playlistRec);
-        artistRec = new JButton(MenuViewModel.ARTIST_REC_LABEL);
         buttons.add(artistRec);
+
 
         profile.addActionListener(
                 new ActionListener() {
                     @Override
+
                     public void actionPerformed(ActionEvent evt) {
                         menuController.switchToProfileView();
                     }

@@ -22,6 +22,7 @@ public class MenuInteractor implements MenuInputBoundary {
     public void switchToSongRecView() { menuPresenter.switchToSongRecView(); }
 
     @Override
+
     public void switchToProfileView() { menuPresenter.switchToProfileView(); }
 
 }

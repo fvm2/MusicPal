@@ -9,7 +9,7 @@ This is the repository for our group project for CSC207 Software Design at the U
 
 The initial code was obtained from https://github.com/CSC207-2024F-UofT/NoteApplication.
 
-### Team Members:
+### Contributors:
 
 - Felipe Valderrama - [fvm2](github.com/fvm2)
 - Ceren Sahin - [CeroSahin](github.com/CeroSahin)
@@ -17,80 +17,170 @@ The initial code was obtained from https://github.com/CSC207-2024F-UofT/NoteAppl
 - Canberk Soytekin - [KameSanKaro](github.com/KameSanKaro)
 
 
-## Backend by Felipe
+## Project Overview
 
-I tried to simplify things by implementing the whole backend logic, so you guys can focus on the frontend user interaction,
-for this I provided an API using public methods in different classes. I had to think about the whole process logic first,
-and when I had a clear idea, I made a sketch of the different classes with their attributes and methods, this is the documentation needed
-for you guys to use the logic from the frontend, I also will try to add as many comments and javadocs to my code.
+MusicPal is an intelligent music recommendation application that helps users discover new music tailored to their unique
+tastes. By leveraging AI-powered recommendation algorithms, the application goes beyond traditional streaming platform
+suggestions to provide personalized musical discoveries.
 
-### Domain Layer
+### Purpose
+The project was created to solve the common frustration of music listeners who struggle to find new songs that truly
+match their individual preferences. Many music platforms offer generic recommendations based on broad categories,
+while MusicPal aims to provide more nuanced, personalized suggestions by learning from user interactions and preferences.
 
-1. Create Users in registration:
+### Problem Statement
+Music discovery can be overwhelming and time-consuming. Users often find themselves:
 
-```java
-User user = new User("John", "Doe", "john@email.com", "USA", "rawPassword");
-```
+- Stuck listening to the same artists and genres
+- Overwhelmed by massive music libraries
+- Dissatisfied with algorithm-generated recommendations that feel impersonal
 
-2. Create/Update preferences:
+MusicPal addresses these challenges by:
 
-```java
-Preference pref = new Preference();
-pref.addSong("Bohemian Rhapsody by Queen");
-pref.addArtist("Pink Floyd");
-pref.addAlbum("Abbey Road by The Beatles");
-pref.addGenre("Progressive Rock");
-```
+- Allowing users to explicitly define their music preferences
+- Using AI to generate targeted recommendations
+- Enabling users to provide feedback that continuously refines future suggestions
 
-3. Handle recommendations:
+## Features
+### User Management
 
-```java
-Recommendation rec = new Recommendation(userId, "Dark Side of the Moon by Pink Floyd", "Album", 0);
-rec.rate(true);  // User likes the recommendation
-```
+- Secure user registration and login system
+- Personal profile creation with basic user information
+- Password-protected accounts to ensure privacy
 
-### Infrastructure.Database Layer
+#### sign up before
+![before_signup.jpg](images%20for%20readme%2Fbefore_signup.jpg)
+#### sign up after
+![after_signup.jpg](images%20for%20readme%2Fafter_signup.jpg)
+#### login before
+![before_login.jpg](images%20for%20readme%2Fbefore_login.jpg)
+#### login after
+![after_login_and_menu.jpg](images%20for%20readme%2Fafter_login_and_menu.jpg)
 
-1. User Registration:
+### Music Preference Customization
 
-```java
-UserRepository userRepo = new UserRepository();
-User newUser = new User("John", "Doe", "john@email.com", "USA", "password123");
-userRepo.save(newUser);
-```
+- Detailed preference input for:
 
-2. User Login:
+    - Songs
+    - Genres
+    - Artists
+    - Albums
 
-```java
-// In a real use case, we would compare the inputs from the GUI.
-boolean isValid = userRepo.verifyPassword("john@email.com", "password123");
-```
+- Ability to specify multiple preferences in each category
+- Easy-to-use text-based input interface
 
-3. Find a User:
+#### preferences before
+![preferences_before.jpg](images%20for%20readme%2Fpreferences_before.jpg)
+#### preferences after
+![preferences_after.jpg](images%20for%20readme%2Fpreferences_after.jpg)
 
-```java
-Optional<User> user = userRepo.findByEmail("john@email.com");
-```
+### AI-Powered Recommendations
 
-4. Update User:
+- Personalized music recommendations generated using OpenAI technology
+- Recommendation types focused on songs
+- Like/Dislike options for each recommendation
 
-```java
-user.ifPresent(u -> {
-    u.setCountry("Canada");
-    userRepo.update(u);
-});
-```
+#### getting recommendation
+![after_get_rec.jpg](images%20for%20readme%2Fafter_get_rec.jpg)
 
-## Package Structure
+### Recommendation History
+
+- View past music recommendations
+- Track liked and disliked suggestions
+- Monitor recommendation evolution over time
+
+#### user liked the rec and is now viewing history
+![view_history_after.jpg](images%20for%20readme%2Fview_history_after.jpg)
+### User Experience
+
+- Simple, intuitive graphical interface
+- Card-based navigation between different application screens
+- Quick access to key features like profile, preferences, and recommendations
+
+### Technical Features
+
+- Uses Java Swing for GUI
+- Integrates with OpenAI for intelligent recommendations
+- Modular design allowing easy future expansions
+
+### Example Workflow
+
+1. Create an account
+2. Set your music preferences
+3. Request a recommendation
+4. Like or dislike the suggested song
+5. Watch your recommendations improve over time
+
+### Ideal For
+
+- Music enthusiasts seeking personalized discovery
+- Users tired of generic streaming platform recommendations
+- People interested in expanding their musical horizons
+
+
+## Feedback and Contributions
+We value your input! Please use our MusicPal Feedback Google Form to share your thoughts, suggestions, and experiences with the application.
+### Feedback Guidelines
+#### What We Want:
+
+- Specific, constructive comments
+- Detailed descriptions of user experiences
+- Suggestions for new features
+- Reported bugs or performance issues
+- Accessibility improvement recommendations
+
+#### Feedback Categories:
+
+- User Interface
+- Recommendation Accuracy
+- Feature Suggestions
+- Technical Performance
+- Accessibility Concerns
+
+#### Submission Requirements
+
+- Be clear and concise
+- Provide specific examples
+- Include steps to reproduce any issues
+- Share your device and software version
+
+#### What to Expect:
+
+- Acknowledgment of feedback within 5-7 business days
+- Potential follow-up questions for clarification
+- Updates on how your feedback might be implemented
+- No guarantee of immediate feature implementation
+
+### Contribution Guidelines
+#### For Developers:
+
+- Fork the repository
+- Create a detailed pull request
+- Follow existing code style
+- Include comprehensive tests
+- Describe proposed changes thoroughly
+
+#### Reporting Bugs:
+
+- Use GitHub Issues
+- Provide detailed reproduction steps
+- Include system configuration
+- Attach relevant logs or screenshots
+
+#### Contact:
+GitHub Discussions: Project Discussion Board
+
+Note: We reserve the right to moderate and select feedback for implementation based on project goals and resources.
+
+## Package Structure (for backend summary)
 
 ### 1. Entity Layer (entity)
-   Core business objects representing the domain model. 
-   
+Core business objects representing the domain model.
+
 #### User.java
 
 - Represents system users
-- Key attributes: id, name, surname, email, country, password, thread (OpenAI chat thread), friends
-- Methods for friend list management
+- Key attributes: id, name, surname, email, country, password, thread (OpenAI chat thread)
 
 #### Preference.java
 
@@ -105,17 +195,16 @@ user.ifPresent(u -> {
 - Methods for rating recommendations
 
 ### 2. DTO Layer (dto)
-   Data Transfer Objects for safe data transfer between layers.
+Data Transfer Objects for safe data transfer between layers.
 
 #### UserDTO: User registration data
 #### LoginDTO: Login credentials
 #### PreferenceDTO: Music preferences data
 #### RecommendationDTO: Recommendation data
-#### FriendRequestDTO: Friend request data
 
 ### 3. Service Layer (service)
-   Business logic implementation. 
-   
+Business logic implementation.
+
 #### OpenAIService.java
 
 - Manages OpenAI API interactions
@@ -164,8 +253,8 @@ rateRecommendation(int recId, boolean liked): Rates recommendations
 - Provides success/failure status and error handling
 
 ### 4. Infrastructure Layer (infrastructure.database)
-   Data access and persistence. 
-   
+Data access and persistence.
+
 #### DatabaseConnection.java
 
 - Manages database connections using HikariCP
@@ -185,31 +274,31 @@ rateRecommendation(int recId, boolean liked): Rates recommendations
 ## Database Schema:
 ```sql
 CREATE TABLE users (
-id SERIAL PRIMARY KEY,
-name VARCHAR(255),
-surname VARCHAR(255),
-email VARCHAR(255) UNIQUE,
-country VARCHAR(255),
-password VARCHAR(255),
-thread VARCHAR(255),
-friends TEXT
+                       id SERIAL PRIMARY KEY,
+                       name VARCHAR(255),
+                       surname VARCHAR(255),
+                       email VARCHAR(255) UNIQUE,
+                       country VARCHAR(255),
+                       password VARCHAR(255),
+                       thread VARCHAR(255),
+                       friends TEXT
 );
 
 CREATE TABLE preferences (
-preference_id SERIAL PRIMARY KEY,
-user_id INTEGER REFERENCES users(id),
-songs TEXT,
-genres TEXT,
-artists TEXT,
-albums TEXT
+                             preference_id SERIAL PRIMARY KEY,
+                             user_id INTEGER REFERENCES users(id),
+                             songs TEXT,
+                             genres TEXT,
+                             artists TEXT,
+                             albums TEXT
 );
 
 CREATE TABLE recommendations (
-recommendation_id SERIAL PRIMARY KEY,
-user_id INTEGER REFERENCES users(id),
-content TEXT,
-type VARCHAR(50),
-by INTEGER,
-liked BOOLEAN
+                                 recommendation_id SERIAL PRIMARY KEY,
+                                 user_id INTEGER REFERENCES users(id),
+                                 content TEXT,
+                                 type VARCHAR(50),
+                                 by INTEGER,
+                                 liked BOOLEAN
 );
 ```
