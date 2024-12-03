@@ -118,5 +118,6 @@ public class ProfileView extends JPanel implements PropertyChangeListener {
 
     public void setProfileController(ProfileController profileController) {
         this.profileController = profileController;
+        profileController.executeLoadProfile(profileViewModel.getState().getEmail(), profileViewModel.getState().getName() + " " + profileViewModel.getState().getSurname());
     }
 }

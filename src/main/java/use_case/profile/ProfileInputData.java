@@ -1,3 +1,3 @@
 package use_case.profile;
 
-public record ProfileInputData(String email) {}
+public record ProfileInputData(String email, String username) {}

@@ -31,7 +31,8 @@ public class ProfileInteractor implements ProfileInputBoundary {
                     getRecommendationHistory(user.getId())
             );
             profilePresenter.presentProfile(outputData);
-        } else {
+        }
+        else {
             profilePresenter.presentError(result.getError());
         }
     }

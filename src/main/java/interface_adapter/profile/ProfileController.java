@@ -10,8 +10,8 @@ public class ProfileController {
         this.profileInteractor = profileInteractor;
     }
 
-    public void executeLoadProfile(String email) {
-        ProfileInputData profileInputData = new ProfileInputData(email);
+    public void executeLoadProfile(String email, String username) {
+        ProfileInputData profileInputData = new ProfileInputData(email, username);
         profileInteractor.loadProfile(profileInputData);
     }
 
