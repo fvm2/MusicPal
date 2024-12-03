@@ -135,6 +135,25 @@ public class MusicPalApp extends JFrame {
         gbc.gridx = 1;
         panel.add(nameField, gbc);
         // Add other fields similarly...
+        gbc.gridx = 0; gbc.gridy = y++;
+        panel.add(new JLabel("Surname:"), gbc);
+        gbc.gridx = 1;
+        panel.add(surnameField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = y++;
+        panel.add(new JLabel("Country:"), gbc);
+        gbc.gridx = 1;
+        panel.add(countryField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = y++;
+        panel.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1;
+        panel.add(emailField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = y++;
+        panel.add(new JLabel("Set Password:"), gbc);
+        gbc.gridx = 1;
+        panel.add(passwordField, gbc);
 
         gbc.gridx = 1; gbc.gridy = y++;
         panel.add(signupButton, gbc);
