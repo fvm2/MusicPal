@@ -1,5 +1,8 @@
 # CSC207 Software Design Project
 
+###  Presentation Slides: 
+[slides](https://docs.google.com/presentation/d/1dzptTVQtqOvaQz15DaR7YzDP-jL7LxhHNIqMRIsJRa0/edit?usp=sharing)
+
 ### MusicPal: AI Music Recommendation System :musical_note:
 
 This is the repository for our group project for CSC207 Software Design at the University of Toronto. Our project is a music recommendation system that uses AI to recommend songs based on user preferences. The project is written in Java and uses Swing for the GUI.

@@ -41,16 +41,18 @@ public class Application {
 
         // Build the application using AppBuilder
         AppBuilder appBuilder = getAppBuilder(openAIService, userService, preferenceService, recommendationService);
-        appBuilder.addSignupView()
-                .addLoginView()
+        appBuilder.addLoginView()
+                .addSignupView()
                 .addProfileView()
                 .addMenuView()
                 .addArtistRecView()
                 .addPlaylistRecView()
+                .addProfileView()
                 .addSongRecView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addMenuUseCase()
+                .addProfileUseCase()
                 .addArtistRecUseCase()
                 .addPlaylistUseCase()
                 .addSongUseCase()

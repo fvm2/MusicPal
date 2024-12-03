@@ -9,5 +9,4 @@ public interface MenuInputBoundary {
     void switchToSongRecView();
 
     void switchToProfileView();
-
 }
