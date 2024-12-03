@@ -12,4 +12,5 @@ public class RecommendPlaylistInputData {
     public List<String> getSongs() {
         return songs;
     }
+
 }

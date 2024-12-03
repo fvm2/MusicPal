@@ -25,9 +25,11 @@ public class Application {
         openAIService.initialize();
 
         // Instantiate repositories
+
         final UserRepository userRepository = new UserRepository();
         final PreferenceRepository preferenceRepository = new PreferenceRepository();
         final RecommendationRepository recommendationRepository = new RecommendationRepository();
+
 
         // Instantiate services
         UserService userService = new UserService(userRepository, openAIService);
@@ -40,13 +42,15 @@ public class Application {
         );
 
         // Build the application using AppBuilder
+
         AppBuilder appBuilder = getAppBuilder(openAIService, userService, preferenceService, recommendationService);
-        appBuilder.addLoginView()
-                .addSignupView()
+        appBuilder.addSignupView()
+                .addLoginView()
                 .addProfileView()
                 .addMenuView()
                 .addArtistRecView()
                 .addPlaylistRecView()
+
                 .addProfileView()
                 .addSongRecView()
                 .addSignupUseCase()
@@ -73,4 +77,5 @@ public class Application {
         // Build the application with all services
         return new AppBuilder(userService, preferenceService, recommendationService);
     }
+
 }
