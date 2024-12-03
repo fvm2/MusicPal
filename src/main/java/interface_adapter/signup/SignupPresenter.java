@@ -1,9 +1,10 @@
 package interface_adapter.signup;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.menu.MenuViewModel;
+import interface_adapter.profile.ProfileState;
+import interface_adapter.profile.ProfileViewModel;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 
@@ -12,27 +13,33 @@ import use_case.signup.SignupOutputData;
  */
 public class SignupPresenter implements SignupOutputBoundary {
 
-    private final interface_adapter.signup.SignupViewModel signupViewModel;
+    private final SignupViewModel signupViewModel;
     private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
     private final MenuViewModel menuViewModel;
+    private final ProfileViewModel profileViewModel;
 
     public SignupPresenter(ViewManagerModel viewManagerModel,
-                           interface_adapter.signup.SignupViewModel signupViewModel,
-                           LoginViewModel loginViewModel, MenuViewModel menuViewModel) {
+                           SignupViewModel signupViewModel,
+                           LoginViewModel loginViewModel, MenuViewModel menuViewModel,
+                           ProfileViewModel profileViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
         this.loginViewModel = loginViewModel;
         this.menuViewModel = menuViewModel;
+        this.profileViewModel = profileViewModel;
     }
 
     @Override
     public void prepareSuccessView(SignupOutputData response) {
         // On success, switch to the login view.
-        final LoginState loginState = loginViewModel.getState();
-        loginState.setName(response.getName());
-        this.loginViewModel.setState(loginState);
-        loginViewModel.firePropertyChanged();
+        final ProfileState profileState = profileViewModel.getState();
+        profileState.setName(response.getName());
+        profileState.setSurname(response.getSurname());
+        profileState.setEmail(response.getEmail());
+        profileState.setCountry(response.getCountry());
+        profileViewModel.setState(profileState);
+        profileViewModel.firePropertyChanged();
 
         viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
@@ -45,6 +52,7 @@ public class SignupPresenter implements SignupOutputBoundary {
 
     @Override
     public void switchToLoginView() {
+        System.out.println("trying to implement the switchToLoginView method");
         viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }

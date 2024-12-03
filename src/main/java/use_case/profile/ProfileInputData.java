@@ -1,4 +1,5 @@
 package use_case.profile;
 
-public record ProfileInputData(String username) {
+public record ProfileInputData(String email, String username) {
+
 }

@@ -19,13 +19,16 @@ public class LoginInteractor implements LoginInputBoundary {
 
     @Override
     public void execute(LoginInputData loginInputData) {
-        final String email = loginInputData.getEmail();
-        final String password = loginInputData.getPassword();
-
-        final Result<User> result = userService.login(email, password);
+        final Result<User> result = userService.login(loginInputData.getEmail(), loginInputData.getPassword());
 
         if (result.isSuccess()) {
-            final LoginOutputData loginOutputData = new LoginOutputData(result.getData().getName());
+            final User user = result.getData();
+            final LoginOutputData loginOutputData = new LoginOutputData(
+                    user.getName(),
+                    user.getSurname(),
+                    user.getEmail(),
+                    user.getCountry()
+            );
             loginPresenter.prepareSuccessView(loginOutputData);
         }
         else {

@@ -1,42 +1,32 @@
 package interface_adapter.profile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileState {
-    private String username;
-    private List<String> favorites;
-    private List<String> friends;
+    private String email = "";
+    private String name = "";
+    private String surname = "";
+    private String country = "";
     private String error;
+    private List<String> recommendationHistory = new ArrayList<>();
 
-    public String getUsername() {
-        return username;
-    }
+    // Getters and setters
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public List<String> getFavorites() {
-        return favorites;
+    public List<String> getRecommendationHistory() { return new ArrayList<>(recommendationHistory); }
+    public void setRecommendationHistory(List<String> history) {
+        this.recommendationHistory = new ArrayList<>(history);
     }
+    public String getSurname() { return surname; }
+    public void setSurname(String surname) { this.surname = surname; }
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country; }
 
-    public void setFavorites(List<String> favorites) {
-        this.favorites = favorites;
-    }
-
-    public List<String> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<String> friends) {
-        this.friends = friends;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
+    public String getError() { return error; }
+    public void setError(String error) { this.error = error; }
 }

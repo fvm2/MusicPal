@@ -1,8 +1,8 @@
 package use_case.profile;
 
 public interface ProfileOutputBoundary {
-    void showFavorites(ProfileOutputData profileOutputData);
-    void showFriends(ProfileOutputData profileOutputData);
-    void logout();
-    void prepareFailView(String error);
+    void presentProfile(ProfileOutputData profileOutputData);
+    void presentError(String error);
+    void presentLogout();
+    void presentBackToMenu();
 }
