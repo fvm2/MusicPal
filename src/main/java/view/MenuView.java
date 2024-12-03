@@ -35,9 +35,10 @@ public class MenuView extends JPanel implements ActionListener, PropertyChangeLi
         buttons.add(playlistRec);
         buttons.add(artistRec);
 
-        // setting up funcitonality for the buttons
+
         profile.addActionListener(
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent evt) {
                         menuController.switchToProfileView();
                     }
