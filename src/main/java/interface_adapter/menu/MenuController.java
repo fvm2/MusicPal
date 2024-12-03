@@ -19,4 +19,5 @@ public class MenuController {
 
     public void switchToSongRecView() { menuInteractor.switchToSongRecView(); }
 
+    public void switchToProfileView() { menuInteractor.switchToProfileView(); }
 }
