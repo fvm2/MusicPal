@@ -6,4 +6,6 @@ public interface MenuOutputBoundary {
     void switchToPlaylistRecView();
 
     void switchToSongRecView();
+
+    void switchToProfileView();
 }

@@ -19,7 +19,7 @@ import interface_adapter.login.LoginViewModel;
  */
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
 
-    private final String viewName = "Log In";
+    private final String viewName = "log in";
     private final LoginViewModel loginViewModel;
     // email + password fields
     private final JTextField emailInputField = new JTextField(15);
