@@ -108,8 +108,6 @@ MusicPal addresses these challenges by:
 4. Like or dislike the suggested song
 5. Watch your recommendations improve over time
 
-#### Screenshots will be added shortly.
-
 ### Ideal For
 
 - Music enthusiasts seeking personalized discovery
