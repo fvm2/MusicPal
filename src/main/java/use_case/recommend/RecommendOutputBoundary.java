@@ -1,4 +1,8 @@
 package use_case.recommend;
 
-public class RecommendOutputBoundary {
+public interface RecommendOutputBoundary {
+
+    void popRecommendation(RecommendOutputData recommendOutputData);
+
+    void switchToProfileView();
 }
