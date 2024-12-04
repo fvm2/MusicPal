@@ -1,85 +1,68 @@
 package use_case.profile;
 
-import entity.Preference;
 import entity.User;
-import service.PreferenceService;
+import entity.Recommendation;
+import infrastructure.database.RecommendationRepository;
 import service.Result;
 import service.UserService;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProfileInteractor implements ProfileInputBoundary {
-    final ProfileOutputBoundary profilePresenter;
     private final UserService userService;
-    private final PreferenceService preferenceService;
+    private final ProfileOutputBoundary profilePresenter;
 
-    public ProfileInteractor(ProfileOutputBoundary profileOutputBoundary,
-                             UserService userService,
-                             PreferenceService preferenceService) {
-        this.profilePresenter = profileOutputBoundary;
+    public ProfileInteractor(UserService userService, ProfileOutputBoundary profilePresenter) {
         this.userService = userService;
-        this.preferenceService = preferenceService;
+        this.profilePresenter = profilePresenter;
     }
 
     @Override
-    public void showFavorites(ProfileInputData profileInputData) {
-        String email = profileInputData.username(); // Assuming username is email
+    public void loadProfile(ProfileInputData profileInputData) {
+        Result<User> result = userService.getUserByEmail(profileInputData.email());
 
-        // Retrieve user by email
-        Result<User> userResult = userService.getUserByEmail(email);
-
-        if (userResult.isSuccess()) {
-            User user = userResult.getData();
-
-            // Retrieve preferences
-            Result<Preference> preferenceResult = preferenceService.getPreferences(user.getId());
-
-            if (preferenceResult.isSuccess()) {
-                Preference preference = preferenceResult.getData();
-
-                // Combine all preferences into a single list of favorites
-                List<String> favorites = new ArrayList<>();
-                favorites.addAll(preference.getSongs());
-                favorites.addAll(preference.getArtists());
-                favorites.addAll(preference.getAlbums());
-                favorites.addAll(preference.getGenres());
-
-                ProfileOutputData outputData = new ProfileOutputData(user.getEmail(), favorites, null);
-                profilePresenter.showFavorites(outputData);
-            } else {
-                profilePresenter.prepareFailView("Failed to retrieve preferences: " + preferenceResult.getError());
-            }
-        } else {
-            profilePresenter.prepareFailView("User not found: " + userResult.getError());
+        if (result.isSuccess()) {
+            User user = result.getData();
+            ProfileOutputData outputData = new ProfileOutputData(
+                    user.getEmail(),
+                    user.getName(),
+                    user.getSurname(),
+                    user.getCountry(),
+                    getRecommendationHistory(user.getId())
+            );
+            profilePresenter.presentProfile(outputData);
+        }
+        else {
+            profilePresenter.presentError(result.getError());
         }
     }
 
-    @Override
-    public void showFriends(ProfileInputData profileInputData) {
-        String email = profileInputData.username(); // Assuming username is email
+    private List<String> getRecommendationHistory(int userId) {
+        // Get recommendations from repository
+        RecommendationRepository recRepo = new RecommendationRepository();
+        List<Recommendation> recommendations = recRepo.findByUserId(userId);
 
-        // Retrieve user by email
-        Result<User> userResult = userService.getUserByEmail(email);
+        return recommendations.stream()
+                .map(this::formatRecommendation)
+                .collect(Collectors.toList());
+    }
 
-        if (userResult.isSuccess()) {
-            User user = userResult.getData();
-
-            // Get friends' IDs
-            List<Integer> friendIds = user.getFriends();
-
-            // Retrieve friend users
-            List<String> friendEmails = userService.getUserEmailsByIds(friendIds);
-
-            ProfileOutputData outputData = new ProfileOutputData(user.getEmail(), null, friendEmails);
-            profilePresenter.showFriends(outputData);
-        } else {
-            profilePresenter.prepareFailView("User not found: " + userResult.getError());
-        }
+    private String formatRecommendation(Recommendation rec) {
+        return String.format("%s (%s) - %s",
+                rec.getContent(),
+                rec.getType(),
+                rec.getLiked() == null ? "Not rated" :
+                        rec.getLiked() ? "Liked" : "Disliked"
+        );
     }
 
     @Override
     public void logout() {
-        profilePresenter.logout();
+        profilePresenter.presentLogout();
+    }
+
+    @Override
+    public void backToMenu() {
+        profilePresenter.presentBackToMenu();
     }
 }

@@ -26,7 +26,11 @@ public class SignupInteractor implements SignupInputBoundary {
         final Result<User> result = userService.register(newUser);
 
         if (result.isSuccess()) {
-            final SignupOutputData signupOutputData = new SignupOutputData(result.getData().getName());
+            final User user = result.getData();
+            final SignupOutputData signupOutputData = new SignupOutputData(user.getName(),
+                    user.getSurname(),
+                    user.getEmail(),
+                    user.getCountry());
             userPresenter.prepareSuccessView(signupOutputData);
         }
         else {
@@ -41,5 +45,7 @@ public class SignupInteractor implements SignupInputBoundary {
     }
 
     @Override
-    public void switchMenuView() { userPresenter.switchToMenuView(); }
+    public void switchMenuView() {
+        userPresenter.switchToMenuView();
+    }
 }

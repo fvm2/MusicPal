@@ -4,28 +4,22 @@ import use_case.profile.ProfileInputBoundary;
 import use_case.profile.ProfileInputData;
 
 public class ProfileController {
+    private final ProfileInputBoundary profileInteractor;
 
-    private final ProfileInputBoundary profileInputBoundary;
-    private final ProfileViewModel profileViewModel;
-
-    public ProfileController(ProfileInputBoundary profileInputBoundary, ProfileViewModel profileViewModel) {
-        this.profileInputBoundary = profileInputBoundary;
-        this.profileViewModel = profileViewModel;
+    public ProfileController(ProfileInputBoundary profileInteractor) {
+        this.profileInteractor = profileInteractor;
     }
 
-    public void showFavorites() {
-        String username = profileViewModel.getState().getUsername();
-        ProfileInputData inputData = new ProfileInputData(username);
-        profileInputBoundary.showFavorites(inputData);
+    public void executeLoadProfile(String email, String username) {
+        ProfileInputData profileInputData = new ProfileInputData(email, username);
+        profileInteractor.loadProfile(profileInputData);
     }
 
-    public void showFriends() {
-        String username = profileViewModel.getState().getUsername();
-        ProfileInputData inputData = new ProfileInputData(username);
-        profileInputBoundary.showFriends(inputData);
+    public void executeLogout() {
+        profileInteractor.logout();
     }
 
-    public void logout() {
-        profileInputBoundary.logout();
+    public void executeBackToMenu() {
+        profileInteractor.backToMenu();
     }
 }

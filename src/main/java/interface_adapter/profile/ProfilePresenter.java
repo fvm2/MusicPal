@@ -1,11 +1,10 @@
 package interface_adapter.profile;
 
-import interface_adapter.ViewManagerModel;
 import use_case.profile.ProfileOutputBoundary;
 import use_case.profile.ProfileOutputData;
+import interface_adapter.ViewManagerModel;
 
 public class ProfilePresenter implements ProfileOutputBoundary {
-
     private final ProfileViewModel profileViewModel;
     private final ViewManagerModel viewManagerModel;
 
@@ -15,34 +14,35 @@ public class ProfilePresenter implements ProfileOutputBoundary {
     }
 
     @Override
-    public void showFavorites(ProfileOutputData profileOutputData) {
-        ProfileState state = profileViewModel.getState();
-        state.setUsername(profileOutputData.username());
-        state.setFavorites(profileOutputData.favorites());
-        profileViewModel.setState(state);
-        profileViewModel.firePropertyChanged("favorites");
+    public void presentProfile(ProfileOutputData data) {
+        ProfileState currentState = profileViewModel.getState();
+        currentState.setEmail(data.email());
+        currentState.setName(data.name());
+        currentState.setSurname(data.surname());
+        currentState.setCountry(data.country());
+        currentState.setRecommendationHistory(data.recommendationHistory());
+        currentState.setError(null);
+        profileViewModel.setState(currentState);
+        profileViewModel.firePropertyChanged();
     }
 
     @Override
-    public void showFriends(ProfileOutputData profileOutputData) {
-        ProfileState state = profileViewModel.getState();
-        state.setUsername(profileOutputData.username());
-        state.setFriends(profileOutputData.friends());
-        profileViewModel.setState(state);
-        profileViewModel.firePropertyChanged("friends");
+    public void presentError(String error) {
+        ProfileState currentState = profileViewModel.getState();
+        currentState.setError(error);
+        profileViewModel.setState(currentState);
+        profileViewModel.firePropertyChanged();
     }
 
     @Override
-    public void logout() {
+    public void presentLogout() {
         viewManagerModel.setState("log in");
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
-    public void prepareFailView(String error) {
-        ProfileState state = profileViewModel.getState();
-        state.setError(error);
-        profileViewModel.setState(state);
-        profileViewModel.firePropertyChanged("error");
+    public void presentBackToMenu() {
+        viewManagerModel.setState("menu");
+        viewManagerModel.firePropertyChanged();
     }
 }
