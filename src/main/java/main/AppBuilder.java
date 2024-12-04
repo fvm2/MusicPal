@@ -61,6 +61,7 @@ import use_case.recommend_song.RecommendSongOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import view.MenuView;
 import view.*;
 
 
@@ -98,6 +99,7 @@ public class AppBuilder {
     private final UserService userService;
     private final RecommendationService recommendationService;
     private final PreferenceService preferenceService;
+    private User currentUser;
   
     /**
     * Constructs an AppBuilder with the necessary services.
@@ -198,6 +200,13 @@ public class AppBuilder {
         songRecViewModel = new SongRecViewModel();
         songRecView = new SongRecView(songRecViewModel);
         cardPanel.add(songRecView, songRecView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addRecommendationView() {
+        recommendationViewModel = new RecommendationViewModel();
+        recommendationView = new RecommendationView(recommendationViewModel);
+        cardPanel.add(recommendationView, recommendationView.getViewName());
         return this;
     }
 
