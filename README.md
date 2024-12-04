@@ -1,7 +1,7 @@
 # CSC207 Software Design Project
 
 ###  Presentation Slides: 
-[slides](https://docs.google.com/presentation/d/1dzptTVQtqOvaQz15DaR7YzDP-jL7LxhHNIqMRIsJRa0/edit?usp=sharing)
+[slides](https://docs.google.com/presentation/d/1_BYDgcEi1TCEGoFLzkWqy-kzIS7qlxUUPtuRCI25K-U/edit?usp=sharing)
 
 ### MusicPal: AI Music Recommendation System :musical_note:
 
